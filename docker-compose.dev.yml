@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fpl-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fpl_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fpl-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: fpl-api
+    environment:
+      NODE_ENV: development
+      PORT: 3016
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: fpl_db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+    ports:
+      - "3016:3016"
+    volumes:
+      - .:/app              
+      - /app/node_modules   
+    depends_on:
+      - postgres
+    networks:
+      - fpl-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  fpl-network:
+    driver: bridge

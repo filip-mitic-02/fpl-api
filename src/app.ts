@@ -1,14 +1,25 @@
-import express, { Request, Response } from "express";
+import 'reflect-metadata';
+import express from "express";
+
+import { setupRoutes,setupMiddlewares, setupContainer, envConfig, AppDataSource } from "./config";
+
 
 const app = express();
-const PORT = 3000;
 
-app.use(express.json());
+setupContainer();
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
-});
+setupMiddlewares(app);
+setupRoutes(app);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Database connected');
+
+    app.listen(envConfig.PORT, () => {
+      console.log(`Server running on http://localhost:${envConfig.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Error connecting to database', err);
+  });
