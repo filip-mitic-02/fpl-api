@@ -1,16 +1,27 @@
 import { container } from 'tsyringe';
-import { ExampleRepository } from '../repositories/example.repository';
-import { ExampleService } from '../services/example.service';
+import { dataSource } from './database.config';
 
+import { ExampleController } from '../controllers';
+import { ExampleService } from '../services/';
+import { ExampleRepository } from '../repositories';
 
-export const setupContainer = () => {
-  // ===== EXAMPLE MODULE =====
-  container.register<ExampleRepository>(ExampleRepository, {
-    useClass: ExampleRepository,
-  });
+// Register TypeORM DataSource singleton
+container.registerInstance('DataSource', dataSource);
 
-  container.register<ExampleService>(ExampleService, {
-    useClass: ExampleService,
-  });
+// Register repositories
+container.register(ExampleRepository, {
+  useClass: ExampleRepository,
+});
 
-};
+// Register services
+container.register(ExampleService, {
+  useClass: ExampleService,
+});
+
+// Register controllers
+container.register(ExampleController, {
+  useClass: ExampleController,
+});
+
+// Export container for resolving dependencies
+export { container };

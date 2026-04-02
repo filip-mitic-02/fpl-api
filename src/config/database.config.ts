@@ -1,9 +1,10 @@
 import 'reflect-metadata';
-import { DataSource } from 'typeorm';
 import path from 'path';
-import {envConfig} from './env.config';
 
-const AppDataSource = new DataSource({
+import { DataSource } from 'typeorm';
+import { envConfig } from './env.config';
+
+export const dataSource = new DataSource({
   type: 'postgres',
   host: envConfig.DATABASE_HOST,
   port: envConfig.DATABASE_PORT,
@@ -14,7 +15,4 @@ const AppDataSource = new DataSource({
   logging: envConfig.NODE_ENV === 'development',
   entities: [path.join(__dirname, '../entities/*.{ts,js}')],
   migrations: [path.join(__dirname, '../migrations/*.{ts,js}')],
-  migrationsTableName: 'migrations',
 });
-
-export { AppDataSource };
