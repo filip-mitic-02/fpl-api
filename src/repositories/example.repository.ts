@@ -1,15 +1,22 @@
-import { injectable } from 'tsyringe';
-import { Repository } from 'typeorm';
+import { inject, injectable } from 'tsyringe';
+import { DataSource, Repository } from 'typeorm';
+import { Example } from '../entities';
 
 @injectable()
 export class ExampleRepository {
-    //private repository: Repository<Exmaple>;
+  constructor(
+    @inject('DataSource')
+    private readonly dataSource: DataSource,
+  ) {}
 
-    constructor() {
-        //this.repository = AppDataSource.getRepository(User);
-    }
+  async findById(id: string): Promise<Example | null> {
+    return this.repository.findOneBy({
+      id,
+    });
+  }
 
-    async findById(id:string): Promise<string> {
-        return 'Example.';
-    }
+  // ## PRIVATE
+  private get repository(): Repository<Example> {
+    return this.dataSource.getRepository(Example);
+  }
 }

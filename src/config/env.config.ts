@@ -4,7 +4,6 @@ import { EnvConfig } from '../shared';
 // #load env
 dotenv.config();
 
-
 const defaults: EnvConfig = {
   NODE_ENV: 'development',
   PORT: 3000,
@@ -15,7 +14,6 @@ const defaults: EnvConfig = {
   DATABASE_PASSWORD: 'postgres',
   LOG_LEVEL: 'debug',
 };
-
 
 export const envConfig: EnvConfig = {
   NODE_ENV: process.env.NODE_ENV || defaults.NODE_ENV,

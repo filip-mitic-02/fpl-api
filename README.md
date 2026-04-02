@@ -31,6 +31,12 @@ Open `.env` and adjust any values to match your local setup.
 
 ## Running the Application
 
+### Install dependencies
+
+```bash
+npm i
+```
+
 ### Development (with hot reload)
 
 ```bash
@@ -51,6 +57,27 @@ docker-compose down
 
 ---
 
+## Database Migrations
+
+```bash
+# Create a new migration
+npm run migration:create -- src/migrations/CreateTableName
+
+# Run all pending migrations
+npm run migration:run
+
+# Revert the last migration
+npm run migration:revert
+
+# View migration status
+npm run migration:show
+
+# Reset database (WARNING: deletes all data)
+npm run db:reset
+```
+
+---
+
 ## Logs
 
 ```bash
@@ -65,17 +92,17 @@ docker-compose logs -f postgres
 
 ## API Access
 
-| Environment | URL                      |
-|-------------|--------------------------|
-| Local       | http://localhost:3016     |
+| Environment | URL                   |
+| ----------- | --------------------- |
+| Local       | http://localhost:3016 |
 
 ---
 
 ## Project Stack
 
 | Layer    | Technology              |
-|----------|-------------------------|
+| -------- | ----------------------- |
 | Runtime  | Node.js                 |
 | Language | TypeScript              |
-| Database | PostgreSQL               |
-| Infra    | Docker + Docker Compose  |
+| Database | PostgreSQL              |
+| Infra    | Docker + Docker Compose |

@@ -1,12 +1,15 @@
 import { inject, injectable } from 'tsyringe';
 import { ExampleRepository } from '../repositories/';
+import { Example } from '../entities';
 
 @injectable()
 export class ExampleService {
-    constructor(@inject(ExampleRepository) private readonly exampleRepository: ExampleRepository) { }
+  constructor(
+    @inject(ExampleRepository)
+    private readonly exampleRepository: ExampleRepository,
+  ) {}
 
-    async getExampleById(id: string): Promise<string | null> {
-        return this.exampleRepository.findById(id);
-    }
-
+  async getExampleById(id: string): Promise<Example | null> {
+    return this.exampleRepository.findById(id);
+  }
 }

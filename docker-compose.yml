@@ -9,11 +9,11 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: fpl_db
     ports:
-      - "5433:5432"
+      - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -34,14 +34,14 @@ services:
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
     ports:
-      - "3016:3016"
+      - '3016:3016'
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - fpl-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3016/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:3016/health']
       interval: 30s
       timeout: 10s
       retries: 3

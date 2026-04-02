@@ -1,25 +1,22 @@
 import 'reflect-metadata';
-import express from "express";
+import express from 'express';
 
-import { setupRoutes,setupMiddlewares, setupContainer, envConfig, AppDataSource } from "./config";
+import { AppConfig } from './config/app.config';
+import { envConfig } from './config/env.config';
 
+const bootstrap = async () => {
+  try {
+    const app = express();
 
-const app = express();
+    const appConfig = new AppConfig(app);
 
-setupContainer();
+    appConfig.configure();
 
-setupMiddlewares(app);
-setupRoutes(app);
+    app.listen(envConfig.PORT);
+  } catch (error) {
+    console.log('Server startup failed.');
+    process.exit(1);
+  }
+};
 
-
-AppDataSource.initialize()
-  .then(() => {
-    console.log('Database connected');
-
-    app.listen(envConfig.PORT, () => {
-      console.log(`Server running on http://localhost:${envConfig.PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error('Error connecting to database', err);
-  });
+bootstrap();
