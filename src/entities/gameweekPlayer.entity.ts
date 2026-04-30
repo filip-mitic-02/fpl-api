@@ -3,7 +3,7 @@ import { Gameweek } from "./gameweek.entity";
 import { Player } from "./player.entity";
 
 
-@Entity('gameweeks_Players')
+@Entity('gameweeksPlayers')
 export class GameweekPlayer {
     @PrimaryColumn()
     gameweekId: string;

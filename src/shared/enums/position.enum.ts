@@ -1,6 +1,6 @@
 export enum Position {
-    GK = 'GK',
-    DEF = 'DEF',
-    MID = 'MID',
-    FWD = 'FWD',
+    GOALKEEPER = 'GOALKEEPER',
+    DEFENDER = 'DEFENDER',
+    MIDFIELDER = 'MIDFIELDER',
+    FORWARD = 'FORWARD',
 }

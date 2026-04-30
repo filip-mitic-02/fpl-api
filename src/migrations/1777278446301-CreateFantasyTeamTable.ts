@@ -8,7 +8,7 @@ export class CreateFantasyTeamTable1777278446301 implements MigrationInterface {
                 id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
                 "userId" uuid NOT NULL,
                 name varchar(255) NOT NULL,
-                value decimal(4,1) NOT NULL,
+                value decimal(4,1) NOT NULL DEFAULT 100.0,
                 points integer NOT NULL DEFAULT 0,
                 "transfersRemaining" integer NOT NULL DEFAULT 0,
                 "createdAt" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

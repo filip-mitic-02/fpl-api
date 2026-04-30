@@ -4,7 +4,7 @@ import { Club } from "./club.entity";
 import { Stadium } from "./stadium.entity";
 
 
-@Entity('gameweeks_Clubs')
+@Entity('gameweeksClubs')
 export class GameweekClub {
     @PrimaryColumn()
     gameweekId: string;

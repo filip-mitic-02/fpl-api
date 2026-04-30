@@ -4,7 +4,7 @@ export class CreateGameweeksPlayersTable1777369271497 implements MigrationInterf
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            CREATE TABLE IF NOT EXISTS "gameweeks_Players"(
+            CREATE TABLE IF NOT EXISTS "gameweeksPlayers"(
                 "gameweekId" uuid NOT NULL,
                 "playerId" uuid NOT NULL,
                 goals integer NOT NULL DEFAULT 0,
@@ -23,7 +23,7 @@ export class CreateGameweeksPlayersTable1777369271497 implements MigrationInterf
                     FOREIGN KEY("gameweekId")
                     REFERENCES gameweeks(id),
 
-                CONSTRAINT "fk_gameweeksPlayes_players"
+                CONSTRAINT "fk_gameweeksPlayers_players"
                     FOREIGN KEY("playerId")
                     REFERENCES players(id)
             );    
@@ -32,7 +32,7 @@ export class CreateGameweeksPlayersTable1777369271497 implements MigrationInterf
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            DROP TABLE IF EXISTS "gameweeks_Players"    
+            DROP TABLE IF EXISTS "gameweeksPlayers"    
         `);
     }
 

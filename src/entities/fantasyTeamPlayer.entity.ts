@@ -3,7 +3,7 @@ import { FantasyTeam } from "./fantasyTeam.entity";
 import { Player } from "./player.entity";
 
 
-@Entity('fantasyTeams_Players')
+@Entity('fantasyTeamsPlayers')
 export class FantasyTeamPlayer {
     @PrimaryColumn()
     fantasyTeamId: string;

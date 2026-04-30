@@ -26,6 +26,7 @@ export class FantasyTeam {
         type: 'decimal',
         precision: 4,
         scale: 1,
+        default: 100.0
     })
     value: number;
 

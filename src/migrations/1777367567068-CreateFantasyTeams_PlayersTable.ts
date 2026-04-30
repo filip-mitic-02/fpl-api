@@ -4,7 +4,7 @@ export class CreateFantasyTeamsPlayersTable1777367567068 implements MigrationInt
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            CREATE TABLE IF NOT EXISTS "fantasyTeams_Players"(
+            CREATE TABLE IF NOT EXISTS "fantasyTeamsPlayers"(
                 "fantasyTeamId" uuid NOT NULL,
                 "playerId" uuid NOT NULL,
                 "isCaptain" boolean NOT NULL DEFAULT false,
@@ -26,7 +26,7 @@ export class CreateFantasyTeamsPlayersTable1777367567068 implements MigrationInt
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            DROP TABLE IF EXISTS "fantasyTeams_Players"    
+            DROP TABLE IF EXISTS "fantasyTeamsPlayers"    
         `);
     }
 
