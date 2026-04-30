@@ -1,1 +1,12 @@
 export { Example } from './example.entity';
+export { User } from './user.entity';
+export { FantasyTeam } from './fantasyTeam.entity';
+export { Chip } from './chip.entity';
+export { FantasyTeamChip } from './fantasyTeamChip.entity';
+export { Club } from './club.entity';
+export { Player } from './player.entity';
+export { FantasyTeamPlayer } from './fantasyTeamPlayer.entity';
+export { Gameweek } from './gameweek.entity';
+export { GameweekPlayer } from './gameweekPlayer.entity';
+export { Stadium } from './stadium.entity';
+export { GameweekClub } from './gameweekClub.entity';
