@@ -4,7 +4,7 @@ export class CreateGameweeksClubsTable1777370361863 implements MigrationInterfac
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            CREATE TABLE IF NOT EXISTS "gameweeks_Clubs"(
+            CREATE TABLE IF NOT EXISTS "gameweeksClubs"(
                 "gameweekId" uuid NOT NULL,
                 "clubId" uuid NOT NULL,
                 "stadiumId" uuid NOT NULL,
@@ -29,7 +29,7 @@ export class CreateGameweeksClubsTable1777370361863 implements MigrationInterfac
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            DROP TABLE IF EXISTS "gameweeks_Clubs"    
+            DROP TABLE IF EXISTS "gameweeksClubs"    
         `);
     }
 

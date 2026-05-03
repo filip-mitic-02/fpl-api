@@ -1,0 +1,6 @@
+export enum Position {
+    GOALKEEPER = 'GOALKEEPER',
+    DEFENDER = 'DEFENDER',
+    MIDFIELDER = 'MIDFIELDER',
+    FORWARD = 'FORWARD',
+}

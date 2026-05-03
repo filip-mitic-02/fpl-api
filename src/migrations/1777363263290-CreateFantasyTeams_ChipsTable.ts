@@ -4,7 +4,7 @@ export class CreateFantasyTeamsChipsTable1777363263290 implements MigrationInter
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            CREATE TABLE IF NOT EXISTS "fantasyTeams_Chips"(
+            CREATE TABLE IF NOT EXISTS "fantasyTeamsChips"(
                 "fantasyTeamId" uuid NOT NULL,
                 "chipId" uuid NOT NULL,
                 "isUsed" boolean NOT NULL DEFAULT false,
@@ -17,14 +17,14 @@ export class CreateFantasyTeamsChipsTable1777363263290 implements MigrationInter
 
                 CONSTRAINT "fk_fantasyTeamsChips_chip"
                     FOREIGN KEY("chipId")
-                    REFERENCES "chips"(id)
+                    REFERENCES chips(id)
             ); 
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            DROP TABLE IF EXISTS "fantasyTeams_Chips"    
+            DROP TABLE IF EXISTS "fantasyTeamsChips"    
         `);
     }
 
