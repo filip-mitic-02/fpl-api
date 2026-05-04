@@ -1,1 +1,12 @@
 export { ExampleRepository } from './example.repository';
+export { UserRepository } from './user.repository';
+export { FantasyTeamRepository } from './fantasyTeam.repository';
+export { ChipRepository } from './chip.repository';
+export { FantasyTeamChipRepository } from './fantasyTeamChip.repository';
+export { PlayerRepository } from './player.repository';
+export { ClubRepository } from './club.repository';
+export { GameweekRepository } from './gameweek.repository';
+export { FantasyTeamPlayerRepository } from './fantasyTeamPlayer.repository';
+export { GameweekClubRepository } from './gameweekClub.repository';
+export { GameweekPlayerRepository } from './gameweekPlayer.repository';
+export { StadiumRepository } from './stadium.repository';

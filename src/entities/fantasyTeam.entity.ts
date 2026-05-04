@@ -1,6 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { User } from "./user.entity";
-
+import { User } from "./index";
 
 @Entity('fantasyTeams')
 export class FantasyTeam {

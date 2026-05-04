@@ -1,6 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-
 @Entity('gameweeks')
 export class Gameweek {
     @PrimaryGeneratedColumn('uuid')
