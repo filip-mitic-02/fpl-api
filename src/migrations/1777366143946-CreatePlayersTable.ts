@@ -5,7 +5,7 @@ export class CreatePlayersTable1777366143946 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
 
         await queryRunner.query(`
-            CREATE TYPE "positionsAvailable" AS ENUM ('GK', 'DEF', 'MID', 'FWD');    
+            CREATE TYPE "positionsAvailable" AS ENUM ('GOALKEEPER', 'DEFENDER', 'MIDFIELDER', 'FORWARD');
         `);
 
         await queryRunner.query(`

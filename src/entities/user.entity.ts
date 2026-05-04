@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-
+import { Role } from "../shared";
 
 @Entity('users')
 export class User {
@@ -37,6 +37,12 @@ export class User {
         length: 255,
     })
     password: string;
+
+    @Column({
+        type: 'enum',
+        enum: Role
+    })
+    role: Role;
 
     @Column({
         type: 'date'

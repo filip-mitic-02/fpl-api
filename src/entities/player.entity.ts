@@ -1,7 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Club } from "./club.entity";
-import { Position } from "../shared/enums/position.enum";
-
+import { Club } from "./index";
+import { Position } from "../shared";
 
 @Entity('players')
 export class Player {

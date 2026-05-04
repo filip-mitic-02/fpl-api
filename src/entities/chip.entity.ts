@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { ChipType } from "../shared/enums/chip.enum"
+import { ChipType } from "../shared";
 
 @Entity('chips')
 export class Chip {
