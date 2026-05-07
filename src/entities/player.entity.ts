@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Club } from "./index";
+import { Club } from "./";
 import { Position } from "../shared";
 
 @Entity('players')

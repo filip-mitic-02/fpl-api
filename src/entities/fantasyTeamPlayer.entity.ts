@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
-import { FantasyTeam, Player } from "./index";
+import { FantasyTeam, Player } from "./";
 
 @Entity('fantasyTeamsPlayers')
 export class FantasyTeamPlayer {

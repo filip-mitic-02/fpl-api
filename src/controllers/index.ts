@@ -1,1 +1,2 @@
-export { ExampleController } from './example.controler';
+export { ExampleController } from './example.controller';
+export { AuthController } from './auth.controller';
