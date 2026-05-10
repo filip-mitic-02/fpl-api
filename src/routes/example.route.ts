@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { ExampleController } from '../controllers/example.controler';
+import { ExampleController } from '../controllers/example.controller';
 import { container } from '../config/container.config';
 
 const exampleRouter = Router();

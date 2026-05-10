@@ -1,1 +1,13 @@
 export { ExampleService } from './example.service';
+export { UserService } from './user.service';
+export { FantasyTeamService } from './fantasyTeam.service';
+export { ChipService } from './chip.service';
+export { FantasyTeamChipService } from './fantasyTeamChip.service';
+export { PlayerService } from './player.service';
+export { ClubService } from './club.service';
+export { GameweekService } from './gameweek.service';
+export { StadiumService } from './stadium.service';
+export { FantasyTeamPlayerService } from './fantasyTeamPlayer.service';
+export { GameweekPlayerService } from './gameweekPlayer.service';
+export { GameweekClubService } from './gameweekClub.service';
+export { AuthService } from './auth.service';

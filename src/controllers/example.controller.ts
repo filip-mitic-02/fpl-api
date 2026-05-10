@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
-import { ExampleService } from '../services/';
+import { ExampleService } from '../services';
 
 @injectable()
 export class ExampleController {

@@ -2,8 +2,10 @@ import { container } from 'tsyringe';
 import { dataSource } from './database.config';
 
 import { ExampleController } from '../controllers';
-import { ExampleService } from '../services/';
+import { AuthService, ChipService, ClubService, ExampleService, FantasyTeamChipService, FantasyTeamPlayerService, FantasyTeamService, GameweekClubService, GameweekPlayerService, GameweekService, PlayerService, StadiumService } from '../services/';
 import { ChipRepository, ClubRepository, ExampleRepository, FantasyTeamChipRepository, FantasyTeamPlayerRepository, FantasyTeamRepository, GameweekClubRepository, GameweekPlayerRepository, GameweekRepository, PlayerRepository, StadiumRepository, UserRepository } from '../repositories';
+import { UserService } from '../services/user.service';
+import { AuthController } from '../controllers/auth.controller';
 
 // Register TypeORM DataSource singleton
 container.registerInstance('DataSource', dataSource);
@@ -62,9 +64,61 @@ container.register(ExampleService, {
   useClass: ExampleService,
 });
 
+container.register(UserService, {
+  useClass: UserService,
+});
+
+container.register(FantasyTeamService, {
+  useClass: FantasyTeamService,
+});
+
+container.register(ChipService, {
+  useClass: ChipService,
+});
+
+container.register(FantasyTeamChipService, {
+  useClass: FantasyTeamChipService,
+});
+
+container.register(PlayerService, {
+  useClass: PlayerService,
+});
+
+container.register(ClubService, {
+  useClass: ClubService,
+});
+
+container.register(GameweekService, {
+  useClass: GameweekService,
+});
+
+container.register(StadiumService, {
+  useClass: StadiumService,
+});
+
+container.register(FantasyTeamPlayerService, {
+  useClass: FantasyTeamPlayerService,
+});
+
+container.register(GameweekPlayerService, {
+  useClass: GameweekPlayerService,
+});
+
+container.register(GameweekClubService, {
+  useClass: GameweekClubService,
+});
+
+container.register(AuthService, {
+  useClass: AuthService,
+});
+
 // Register controllers
 container.register(ExampleController, {
   useClass: ExampleController,
+});
+
+container.register(AuthController, {
+  useClass: AuthController,
 });
 
 // Export container for resolving dependencies
