@@ -1,0 +1,1 @@
+export { RegisterSchema } from './auth.schema';
