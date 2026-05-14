@@ -1,1 +1,1 @@
-export { validate } from './auth.middleware';
+export { validateBody } from './validateBody.middleware';

@@ -1,1 +1,1 @@
-export { RegisterSchema } from './auth.schema';
+export { RegisterSchema } from './register.schema';
