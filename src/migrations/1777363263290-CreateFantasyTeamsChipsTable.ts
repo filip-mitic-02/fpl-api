@@ -1,9 +1,8 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateFantasyTeamsChipsTable1777363263290 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             CREATE TABLE IF NOT EXISTS "fantasyTeamsChips"(
                 "fantasyTeamId" uuid NOT NULL,
                 "chipId" uuid NOT NULL,
@@ -20,12 +19,11 @@ export class CreateFantasyTeamsChipsTable1777363263290 implements MigrationInter
                     REFERENCES chips(id)
             ); 
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             DROP TABLE IF EXISTS "fantasyTeamsChips"    
         `);
-    }
-
+  }
 }

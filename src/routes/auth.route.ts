@@ -1,8 +1,8 @@
-import { Router, Request, Response } from "express";
-import { container } from "../config/container.config";
-import { AuthController } from "../controllers";
-import { validateBody } from '../shared/middlewares'
-import { RegisterSchema } from "../shared/schemas";
+import { Router, Request, Response } from 'express';
+import { container } from '../config/container.config';
+import { AuthController } from '../controllers';
+import { validateBody } from '../shared/middlewares';
+import { RegisterSchema } from '../shared/schemas';
 
 const authRouter = Router();
 const authController = container.resolve(AuthController);

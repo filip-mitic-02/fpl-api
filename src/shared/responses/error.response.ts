@@ -1,8 +1,10 @@
-export class ErrorResponse { 
-    message: string;
-    success: false = false;
-    
-    constructor(message: string){
-        this.message = message;
-    }
+export class ErrorResponse {
+  message: string;
+  success = false as const;
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    this.message = message;
+    this.statusCode = statusCode;
+  }
 }

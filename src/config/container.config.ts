@@ -2,8 +2,34 @@ import { container } from 'tsyringe';
 import { dataSource } from './database.config';
 
 import { ExampleController } from '../controllers';
-import { AuthService, ChipService, ClubService, ExampleService, FantasyTeamChipService, FantasyTeamPlayerService, FantasyTeamService, GameweekClubService, GameweekPlayerService, GameweekService, PlayerService, StadiumService } from '../services/';
-import { ChipRepository, ClubRepository, ExampleRepository, FantasyTeamChipRepository, FantasyTeamPlayerRepository, FantasyTeamRepository, GameweekClubRepository, GameweekPlayerRepository, GameweekRepository, PlayerRepository, StadiumRepository, UserRepository } from '../repositories';
+import {
+  AuthService,
+  ChipService,
+  ClubService,
+  ExampleService,
+  FantasyTeamChipService,
+  FantasyTeamPlayerService,
+  FantasyTeamService,
+  GameweekClubService,
+  GameweekPlayerService,
+  GameweekService,
+  PlayerService,
+  StadiumService,
+} from '../services/';
+import {
+  ChipRepository,
+  ClubRepository,
+  ExampleRepository,
+  FantasyTeamChipRepository,
+  FantasyTeamPlayerRepository,
+  FantasyTeamRepository,
+  GameweekClubRepository,
+  GameweekPlayerRepository,
+  GameweekRepository,
+  PlayerRepository,
+  StadiumRepository,
+  UserRepository,
+} from '../repositories';
 import { UserService } from '../services/user.service';
 import { AuthController } from '../controllers/auth.controller';
 
@@ -15,7 +41,7 @@ container.register(ExampleRepository, {
   useClass: ExampleRepository,
 });
 
-container.register( UserRepository, {
+container.register(UserRepository, {
   useClass: UserRepository,
 });
 

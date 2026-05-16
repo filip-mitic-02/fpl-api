@@ -13,7 +13,7 @@ const bootstrap = async () => {
     appConfig.configure();
 
     app.listen(envConfig.PORT);
-  } catch (error) {
+  } catch {
     console.log('Server startup failed.');
     process.exit(1);
   }

@@ -1,14 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('stadiums')
 export class Stadium {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({
-        type: 'varchar',
-        length: 100
-    })
-    name: string;
-    
+  @Column({
+    type: 'varchar',
+    length: 100,
+  })
+  name: string;
 }

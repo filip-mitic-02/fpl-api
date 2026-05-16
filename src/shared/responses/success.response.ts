@@ -1,8 +1,10 @@
 export class SuccessResponse<T> {
-    constructor(data: T){
-        this.data = data;
-    }
+  constructor(data: T, statusCode: number) {
+    this.data = data;
+    this.statusCode = statusCode;
+  }
 
-    data: T;
-    success: true = true;
+  data: T;
+  success = true as const;
+  statusCode: number;
 }

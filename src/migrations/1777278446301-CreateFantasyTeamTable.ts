@@ -1,9 +1,8 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateFantasyTeamTable1777278446301 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             CREATE TABLE IF NOT EXISTS "fantasyTeams" (
                 id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
                 "userId" uuid NOT NULL,
@@ -17,13 +16,12 @@ export class CreateFantasyTeamTable1777278446301 implements MigrationInterface {
                     FOREIGN KEY ("userId")
                     REFERENCES users(id)
             );
-        `)
-    }
+        `);
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             DROP TABLE IF EXISTS "fantasyTeams"
-        `)
-    }
-
+        `);
+  }
 }

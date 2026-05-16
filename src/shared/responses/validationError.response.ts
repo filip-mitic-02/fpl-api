@@ -1,11 +1,11 @@
-import { ErrorResponse } from "./";
+import { StatusCode } from '../enums';
+import { ErrorResponse } from './';
 
-export class ValidationErrorResponse extends ErrorResponse{
+export class ValidationErrorResponse extends ErrorResponse {
+  errors: { field: string; message: string }[];
 
-    errors: { field: string, message: string}[];
-
-    constructor(message: string, errors: {field: string, message: string}[]){
-        super(message);
-        this.errors = errors;
-    }
+  constructor(message: string, errors: { field: string; message: string }[]) {
+    super(message, StatusCode.BAD_REQUEST);
+    this.errors = errors;
+  }
 }
