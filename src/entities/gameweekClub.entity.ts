@@ -1,38 +1,37 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from "typeorm";
-import { Gameweek, Club, Stadium } from "./";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Gameweek, Club, Stadium } from './';
 
 @Entity('gameweeksClubs')
 export class GameweekClub {
-    @PrimaryColumn()
-    gameweekId: string;
+  @PrimaryColumn()
+  gameweekId: string;
 
-    @PrimaryColumn()
-    clubId: string;
+  @PrimaryColumn()
+  clubId: string;
 
-    @ManyToOne(() => Gameweek)
-    @JoinColumn({
-        name: 'gameweekId'
-    })
-    gameweek: Gameweek;
+  @ManyToOne(() => Gameweek)
+  @JoinColumn({
+    name: 'gameweekId',
+  })
+  gameweek: Gameweek;
 
-    @ManyToOne(() => Club)
-    @JoinColumn({
-        name: 'clubId'
-    })
-    club: Club;
+  @ManyToOne(() => Club)
+  @JoinColumn({
+    name: 'clubId',
+  })
+  club: Club;
 
-    @Column()
-    stadiumId: string;
+  @Column()
+  stadiumId: string;
 
-    @ManyToOne(() => Stadium)
-    @JoinColumn({
-        name: 'stadiumId'
-    })
-    stadium: Stadium;
+  @ManyToOne(() => Stadium)
+  @JoinColumn({
+    name: 'stadiumId',
+  })
+  stadium: Stadium;
 
-    @Column({
-        type: 'date'
-    })
-    date: Date;
-
+  @Column({
+    type: 'date',
+  })
+  date: Date;
 }

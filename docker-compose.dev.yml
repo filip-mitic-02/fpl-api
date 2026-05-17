@@ -20,6 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     container_name: fpl-api
+    command: npx ts-node-dev --respawn --transpile-only --poll src/app.ts
     environment:
       NODE_ENV: development
       PORT: 3016

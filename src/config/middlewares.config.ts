@@ -1,4 +1,5 @@
 import express from 'express';
+import { responseHandler } from '../shared/middlewares';
 
 export const setupMiddlewares = (app: express.Application) => {
   // JSON middleware
@@ -8,6 +9,9 @@ export const setupMiddlewares = (app: express.Application) => {
       extended: true,
     }),
   );
+
+  // Response middleware
+  app.use(responseHandler);
 
   // Error handling middleware
 };

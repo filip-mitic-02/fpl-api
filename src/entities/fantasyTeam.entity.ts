@@ -1,49 +1,49 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { User } from "./";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { User } from './';
 
 @Entity('fantasyTeams')
 export class FantasyTeam {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    userId: string;
+  @Column()
+  userId: string;
 
-    @OneToOne(() => User)
-    @JoinColumn({
-        name: 'userId'
-    })
-    user: User;
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'userId',
+  })
+  user: User;
 
-    @Column({
-        type: 'varchar',
-        length: 255,
-    })
-    name: string;
+  @Column({
+    type: 'varchar',
+    length: 255,
+  })
+  name: string;
 
-    @Column({
-        type: 'decimal',
-        precision: 4,
-        scale: 1,
-        default: 100.0
-    })
-    value: number;
+  @Column({
+    type: 'decimal',
+    precision: 4,
+    scale: 1,
+    default: 100.0,
+  })
+  value: number;
 
-    @Column({
-        type: 'integer',
-        default: 0,
-    })
-    points: number;
+  @Column({
+    type: 'integer',
+    default: 0,
+  })
+  points: number;
 
-    @Column({
-        type: 'integer',
-        default: 0,
-    })
-    transfersRemaining: number;
+  @Column({
+    type: 'integer',
+    default: 0,
+  })
+  transfersRemaining: number;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

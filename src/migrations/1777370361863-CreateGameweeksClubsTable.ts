@@ -1,9 +1,8 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateGameweeksClubsTable1777370361863 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             CREATE TABLE IF NOT EXISTS "gameweeksClubs"(
                 "gameweekId" uuid NOT NULL,
                 "clubId" uuid NOT NULL,
@@ -25,12 +24,11 @@ export class CreateGameweeksClubsTable1777370361863 implements MigrationInterfac
                     REFERENCES stadiums(id)
             );    
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             DROP TABLE IF EXISTS "gameweeksClubs"    
         `);
-    }
-
+  }
 }

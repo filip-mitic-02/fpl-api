@@ -1,16 +1,10 @@
-import { inject, injectable } from "tsyringe";
-import { DataSource, Repository } from "typeorm";
-import { FantasyTeam } from "../entities";
-
+import { inject, injectable } from 'tsyringe';
+import { DataSource } from 'typeorm';
 
 @injectable()
 export class FantasyTeamRepository {
-    constructor(
-        @inject('DataSource')
-        private readonly dataSource: DataSource,
-    ){}
-
-    private get repository(): Repository<FantasyTeam> {
-        return this.dataSource.getRepository(FantasyTeam);
-    }
+  constructor(
+    @inject('DataSource')
+    private readonly dataSource: DataSource,
+  ) {}
 }
