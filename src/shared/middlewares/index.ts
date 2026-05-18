@@ -1,2 +1,2 @@
 export { validateBody } from './validateBody.middleware';
-export { responseHandler } from './responseHandler.middleware';
+export { errorHandler } from './errorHandler.middleware';

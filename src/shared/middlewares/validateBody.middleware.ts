@@ -1,21 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodType } from 'zod';
-import { ValidationErrorResponse } from '../responses';
+import { ValidationException } from '../exceptions';
 
 export const validateBody = (schema: ZodType) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const result = schema.safeParse(req.body);
     if (!result.success) {
-      res.send(
-        new ValidationErrorResponse(
-          'Validation failed.',
-          result.error.issues.map((issue) => ({
-            field: String(issue.path[0]),
-            message: issue.message,
-          })),
-        ),
+      throw new ValidationException(
+        'Validation failed.',
+        result.error.issues.map((issue) => ({
+          field: String(issue.path[0]),
+          message: issue.message,
+        })),
       );
-      return;
     }
 
     req.body = result.data;
