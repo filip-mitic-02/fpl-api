@@ -4,7 +4,7 @@ import { HttpException } from './http.exception';
 export class ValidationException extends HttpException {
   constructor(
     message: string,
-    public errors: { field: string; message: string }[],
+    public errors: string[],
   ) {
     super(message, StatusCode.BAD_REQUEST);
   }

@@ -1,10 +1,13 @@
 import { Response } from 'express';
-import { SuccessResponse, ErrorResponse } from './';
+import { ApiResponse } from '../interfaces';
 
-export function sendResponse(res: Response, responseType: SuccessResponse<unknown> | ErrorResponse) {
-  const { statusCode, success, ...rest } = responseType;
-  res.status(statusCode).json({
-    success,
-    ...rest,
-  });
+export function sendResponse<T>(res: Response, statusCode: number, message: string, data?: T, errors?: string[]): Response<ApiResponse<T>> {
+  const response: ApiResponse<T> = {
+    success: statusCode < 400,
+    message,
+    data,
+    errors,
+  };
+
+  return res.status(statusCode).json(response);
 }

@@ -4,14 +4,7 @@ import express from 'express';
 import { AppConfig } from './config/app.config';
 import { envConfig } from './config/env.config';
 
-process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception: ', error);
-  process.exit(1);
-});
-
-process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled rejection: ', reason);
-});
+import './config/processHandlers.config';
 
 const bootstrap = async () => {
   try {

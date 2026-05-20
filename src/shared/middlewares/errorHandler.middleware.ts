@@ -1,20 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpException, ValidationException } from '../exceptions';
-import { ErrorResponse, sendResponse, ValidationErrorResponse } from '../responses';
+import { sendResponse } from '../responses';
 import { StatusCode } from '../enums';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const errorHandler = (error: Error, req: Request, res: Response, _next: NextFunction) => {
+export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof ValidationException) {
-    sendResponse(res, new ValidationErrorResponse(error.message, error.errors));
-    return;
+    return sendResponse(res, error.statusCode, error.message, undefined, error.errors);
   }
 
   if (error instanceof HttpException) {
-    sendResponse(res, new ErrorResponse(error.message, error.statusCode));
-    return;
+    return sendResponse(res, error.statusCode, error.message);
   }
 
-  console.error(error);
-  sendResponse(res, new ErrorResponse('Server error.', StatusCode.SERVER_ERROR));
+  return sendResponse(res, StatusCode.SERVER_ERROR, 'Server error.');
 };

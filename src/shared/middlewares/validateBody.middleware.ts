@@ -8,10 +8,7 @@ export const validateBody = (schema: ZodType) => {
     if (!result.success) {
       throw new ValidationException(
         'Validation failed.',
-        result.error.issues.map((issue) => ({
-          field: String(issue.path[0]),
-          message: issue.message,
-        })),
+        result.error.issues.map((issue) => issue.message),
       );
     }
 
