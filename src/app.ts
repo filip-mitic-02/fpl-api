@@ -4,7 +4,7 @@ import express from 'express';
 import { AppConfig } from './config/app.config';
 import { envConfig } from './config/env.config';
 
-import './config/processHandlers.config';
+import './processHandlers';
 
 const bootstrap = async () => {
   try {

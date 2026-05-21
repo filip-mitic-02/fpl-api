@@ -1,16 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpException, ValidationException } from '../exceptions';
+import { BadRequestException, HttpException } from '../exceptions';
 import { sendResponse } from '../responses';
 import { StatusCode } from '../enums';
 
 export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
-  if (error instanceof ValidationException) {
-    return sendResponse(res, error.statusCode, error.message, undefined, error.errors);
-  }
+  const statusCode = error instanceof HttpException ? error.statusCode : StatusCode.SERVER_ERROR;
+  const message = error instanceof HttpException ? error.message : 'Server error.';
+  const errors = error instanceof BadRequestException ? error.errors : undefined;
 
-  if (error instanceof HttpException) {
-    return sendResponse(res, error.statusCode, error.message);
-  }
-
-  return sendResponse(res, StatusCode.SERVER_ERROR, 'Server error.');
+  return sendResponse(res, statusCode, message, undefined, errors);
 };

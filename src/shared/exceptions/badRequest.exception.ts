@@ -1,7 +1,7 @@
 import { StatusCode } from '../enums';
 import { HttpException } from './http.exception';
 
-export class ValidationException extends HttpException {
+export class BadRequestException extends HttpException {
   constructor(
     message: string,
     public errors: string[],
