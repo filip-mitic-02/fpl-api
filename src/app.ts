@@ -4,6 +4,8 @@ import express from 'express';
 import { AppConfig } from './config/app.config';
 import { envConfig } from './config/env.config';
 
+import './processHandlers';
+
 const bootstrap = async () => {
   try {
     const app = express();

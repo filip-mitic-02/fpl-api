@@ -1,10 +1,11 @@
 export class HttpException extends Error {
-  statusCode: number;
-  trace: string | undefined;
+  readonly trace: string | undefined;
 
-  constructor(message: string, statusCode: number) {
+  constructor(
+    message: string,
+    public readonly statusCode: number,
+  ) {
     super(message);
-    this.statusCode = statusCode;
     this.trace = this.stack;
   }
 }
