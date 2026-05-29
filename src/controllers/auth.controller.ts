@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { AuthService } from '../services';
 import { sendResponse } from '../shared/responses';
-import { RegisterUserRequest, StatusCode } from '../shared';
+import { LoginUserRequest, RegisterUserRequest, StatusCode } from '../shared';
 
 @injectable()
 export class AuthController {
@@ -14,5 +14,10 @@ export class AuthController {
   async register(req: Request<object, object, RegisterUserRequest>, res: Response): Promise<Response> {
     const registerResponse = await this.authService.register(req.body);
     return sendResponse(res, StatusCode.CREATED, 'User registered successfully.', registerResponse);
+  }
+
+  async login(req: Request<object, object, LoginUserRequest>, res: Response): Promise<Response> {
+    const loginResponse = await this.authService.login(req.body);
+    return sendResponse(res, StatusCode.OK, 'User logged in successfully.', loginResponse);
   }
 }

@@ -13,6 +13,7 @@ const defaults: EnvConfig = {
   DATABASE_USER: 'postgres',
   DATABASE_PASSWORD: 'postgres',
   LOG_LEVEL: 'debug',
+  JWT_SECRET: 'default_secret',
 };
 
 export const envConfig: EnvConfig = {
@@ -24,4 +25,5 @@ export const envConfig: EnvConfig = {
   DATABASE_USER: process.env.DATABASE_USER || defaults.DATABASE_USER,
   DATABASE_PASSWORD: process.env.DATABASE_PASSWORD || defaults.DATABASE_PASSWORD,
   LOG_LEVEL: process.env.LOG_LEVEL || defaults.LOG_LEVEL,
+  JWT_SECRET: process.env.JWT_SECRET || defaults.JWT_SECRET,
 };
