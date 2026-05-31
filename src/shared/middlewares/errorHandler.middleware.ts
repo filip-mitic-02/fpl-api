@@ -9,8 +9,17 @@ export const errorHandler = (error: Error, req: Request, res: Response, next: Ne
   const message = error instanceof HttpException ? error.message : 'Server error.';
   const errors = error instanceof BadRequestException ? error.errors : undefined;
 
-  if (!(error instanceof HttpException)) {
-    logger.error('Unexpected error occured.', { message: error.message, trace: error.stack });
+  if (error instanceof HttpException) {
+    logger.warn(error.message, {
+      name: error.name,
+      statusCode: error.statusCode,
+      trace: error.stack,
+      method: req.method,
+      url: req.url,
+      ip: req.ip,
+    });
+  } else {
+    logger.error('Unexpected error occured.', { message: error.message, trace: error.stack, method: req.method, url: req.url, ip: req.ip });
   }
 
   return sendResponse(res, statusCode, message, undefined, errors);

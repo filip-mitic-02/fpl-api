@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { DataSource } from 'typeorm';
-import { RegisterUserRequest, UserResponse } from '../shared/interfaces';
+import { RegisterUserRequest, RegisterUserResponse } from '../shared/interfaces';
 import { User } from '../entities';
 
 @injectable()
@@ -19,7 +19,7 @@ export class UserRepository {
     return count > 0;
   }
 
-  async createUser(userData: RegisterUserRequest): Promise<UserResponse> {
+  async createUser(userData: RegisterUserRequest): Promise<RegisterUserResponse> {
     const { name, surname, email, username, password, dateOfBirth } = userData;
     const createdUser = await this.dataSource.query(
       `INSERT INTO ${this.tableName} (name, surname, email, username, password, "dateOfBirth") VALUES ($1, $2, $3, $4, $5, $6) 
@@ -28,6 +28,12 @@ export class UserRepository {
     );
 
     return createdUser[0];
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const user = await this.dataSource.query(`SELECT * FROM ${this.tableName} WHERE email = $1`, [email]);
+
+    return user[0] ?? null;
   }
 
   private get tableName(): string {

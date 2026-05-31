@@ -7,4 +7,5 @@ export interface EnvConfig {
   DATABASE_USER: string;
   DATABASE_PASSWORD: string;
   LOG_LEVEL: string;
+  JWT_SECRET: string;
 }
