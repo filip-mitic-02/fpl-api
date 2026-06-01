@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { UnauthorizedException } from '../exceptions/unauthorized.exception';
 import jwt from 'jsonwebtoken';
 import { envConfig } from '../../config';
+import { JwtPayload } from '../interfaces/jwtPayload.interface';
 
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -12,7 +13,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
   const accessToken = authHeader.split(' ')[1];
 
   try {
-    const tokenInfo = jwt.verify(accessToken, envConfig.JWT_SECRET) as { userId: string; role: string };
+    const tokenInfo = jwt.verify(accessToken, envConfig.JWT_SECRET) as JwtPayload;
     req.user = tokenInfo;
     next();
   } catch {

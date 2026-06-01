@@ -2,11 +2,11 @@ import { inject, injectable } from 'tsyringe';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserRepository } from '../repositories';
-import { LoginUserRequest, RegisterUserRequest } from '../shared';
+import { LoginResponse, LoginUserRequest, RegisterUserRequest } from '../shared';
 import { ConflictException } from '../shared/exceptions';
-import { UnauthorizedException } from '../shared/exceptions/unauthorized.exception';
+import { UnauthorizedException } from '../shared/exceptions';
 import { envConfig } from '../config';
-import { UserModel } from '../models';
+import { UserPublicInfo } from '../models';
 
 @injectable()
 export class AuthService {
@@ -15,7 +15,7 @@ export class AuthService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async register(bodyData: RegisterUserRequest): Promise<UserModel> {
+  async register(bodyData: RegisterUserRequest): Promise<UserPublicInfo> {
     const { email, username, password } = bodyData;
     const doesUserExist = await this.userRepository.existsByEmailOrUsername(email, username);
     if (doesUserExist) {
@@ -27,7 +27,7 @@ export class AuthService {
     return await this.userRepository.createUser(userData);
   }
 
-  async login(loginRequest: LoginUserRequest): Promise<{ accessToken: string }> {
+  async login(loginRequest: LoginUserRequest): Promise<LoginResponse> {
     const { email, password } = loginRequest;
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
