@@ -1,10 +1,12 @@
-export interface RegisterUserResponse {
+import { Role } from '../shared';
+
+export interface UserModel {
   id: string;
   name: string;
   surname: string;
   email: string;
   username: string;
-  role: string;
+  role: Role;
   dateOfBirth: Date;
   createdAt: Date;
   updatedAt: Date;

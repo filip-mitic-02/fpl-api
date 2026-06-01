@@ -1,7 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 import { DataSource } from 'typeorm';
-import { RegisterUserRequest, RegisterUserResponse } from '../shared/interfaces';
+import { RegisterUserRequest } from '../shared/interfaces';
 import { User } from '../entities';
+import { UserModel } from '../models';
 
 @injectable()
 export class UserRepository {
@@ -19,7 +20,7 @@ export class UserRepository {
     return count > 0;
   }
 
-  async createUser(userData: RegisterUserRequest): Promise<RegisterUserResponse> {
+  async createUser(userData: RegisterUserRequest): Promise<UserModel> {
     const { name, surname, email, username, password, dateOfBirth } = userData;
     const createdUser = await this.dataSource.query(
       `INSERT INTO ${this.tableName} (name, surname, email, username, password, "dateOfBirth") VALUES ($1, $2, $3, $4, $5, $6) 
