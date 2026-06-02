@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class CreateUsersTable1776936303556 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-            CREATE TYPE "userRole" AS ENUM ('USER', 'ADMIN');    
+            CREATE TYPE "userRole" AS ENUM ('REGULAR', 'ADMIN');    
         `);
 
     await queryRunner.query(`
@@ -14,7 +14,7 @@ export class CreateUsersTable1776936303556 implements MigrationInterface {
                 email varchar(255) NOT NULL UNIQUE,
                 username varchar(255) NOT NULL UNIQUE,
                 password varchar(255) NOT NULL,
-                role "userRole" NOT NULL DEFAULT 'USER',
+                role "userRole" NOT NULL DEFAULT 'REGULAR',
                 "dateOfBirth" date NOT NULL,
                 "createdAt" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 "updatedAt" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
