@@ -32,6 +32,7 @@ import {
 } from '../repositories';
 import { UserService } from '../services/user.service';
 import { AuthController } from '../controllers/auth.controller';
+import { UserController } from '../controllers/user.controller';
 
 // Register TypeORM DataSource singleton
 container.registerInstance('DataSource', dataSource);
@@ -145,6 +146,10 @@ container.register(ExampleController, {
 
 container.register(AuthController, {
   useClass: AuthController,
+});
+
+container.register(UserController, {
+  useClass: UserController,
 });
 
 // Export container for resolving dependencies

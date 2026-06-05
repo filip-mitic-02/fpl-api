@@ -1,8 +1,9 @@
 import { inject, injectable } from 'tsyringe';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { AuthService } from '../services';
 import { sendResponse } from '../shared/responses';
 import { LoginUserRequest, RegisterUserRequest, StatusCode } from '../shared';
+import { TypedRequest } from '../shared/types';
 
 @injectable()
 export class AuthController {
@@ -11,12 +12,12 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  async register(req: Request<object, object, RegisterUserRequest>, res: Response): Promise<Response> {
+  async register(req: TypedRequest<RegisterUserRequest>, res: Response): Promise<Response> {
     const registerResponse = await this.authService.register(req.body);
     return sendResponse(res, StatusCode.CREATED, 'User registered successfully.', registerResponse);
   }
 
-  async login(req: Request<object, object, LoginUserRequest>, res: Response): Promise<Response> {
+  async login(req: TypedRequest<LoginUserRequest>, res: Response): Promise<Response> {
     const loginResponse = await this.authService.login(req.body);
     return sendResponse(res, StatusCode.OK, 'User logged in successfully.', loginResponse);
   }
