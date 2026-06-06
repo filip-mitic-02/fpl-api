@@ -1,9 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { UserService } from '../services';
 import { Response } from 'express';
-import { sendResponse } from '../shared/responses';
-import { StatusCode, UserSearchQuery } from '../shared';
-import { AuthenticatedRequest, IdParam, NoParams } from '../shared/types';
+import { StatusCode, UserSearchQuery, sendResponse, AuthenticatedRequest, IdParam, NoParams } from '../shared';
 
 @injectable()
 export class UserController {
@@ -19,11 +17,11 @@ export class UserController {
 
   async deleteUserById(req: AuthenticatedRequest<unknown, IdParam>, res: Response): Promise<Response> {
     await this.userService.deleteUserById(req.user, req.params.id);
-    return sendResponse(res, StatusCode.OK, 'User deleted successfully.');
+    return sendResponse(res, StatusCode.NO_CONTENT, 'User deleted successfully.');
   }
 
-  async getUsers(req: AuthenticatedRequest<unknown, NoParams, UserSearchQuery>, res: Response): Promise<Response> {
-    const listOfUsers = await this.userService.getUsers(req.query);
+  async findUsers(req: AuthenticatedRequest<unknown, NoParams, UserSearchQuery>, res: Response): Promise<Response> {
+    const listOfUsers = await this.userService.findUsers(req.query);
     return sendResponse(res, StatusCode.OK, 'Users data retrieved successfully.', listOfUsers);
   }
 }

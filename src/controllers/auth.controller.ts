@@ -1,9 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { Response } from 'express';
 import { AuthService } from '../services';
-import { sendResponse } from '../shared/responses';
-import { LoginUserRequest, RegisterUserRequest, StatusCode } from '../shared';
-import { TypedRequest } from '../shared/types';
+import { LoginUserRequest, RegisterUserRequest, StatusCode, sendResponse, TypedRequest } from '../shared';
 
 @injectable()
 export class AuthController {

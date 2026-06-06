@@ -1,8 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { UserRepository } from '../repositories';
 import { UserPublicInfo } from '../models';
-import { BadRequestException, ForbiddenException, NotFoundException } from '../shared/exceptions';
-import { JwtPayload, PaginatedUsers, Role, UserSearchQuery } from '../shared';
+import { JwtPayload, PaginatedUsers, Role, UserSearchQuery, BadRequestException, ForbiddenException, NotFoundException } from '../shared';
 
 @injectable()
 export class UserService {
@@ -37,17 +36,15 @@ export class UserService {
     await this.userRepository.deleteById(targetId);
   }
 
-  async getUsers(searchCriteria: UserSearchQuery): Promise<PaginatedUsers> {
+  async findUsers(searchCriteria: UserSearchQuery): Promise<PaginatedUsers> {
     const { limit = '10', offset = '0', search = '' } = searchCriteria;
     const limitNum = Number(limit);
     const offsetNum = Number(offset);
 
-    const users = await this.userRepository.getUsers(limitNum, offsetNum, search);
-    if (users.length === 0) {
-      return { users, total: 0 };
-    }
-
-    const total = await this.userRepository.countUsers(search);
+    const [users, total] = await Promise.all([
+      this.userRepository.findUsers(limitNum, offsetNum, search),
+      this.userRepository.countUsers(search),
+    ]);
 
     return { users, total };
   }

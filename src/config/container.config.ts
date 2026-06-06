@@ -1,9 +1,10 @@
 import { container } from 'tsyringe';
 import { dataSource } from './database.config';
 
-import { ExampleController } from '../controllers';
+import { ExampleController, AuthController, UserController } from '../controllers';
 import {
   AuthService,
+  UserService,
   ChipService,
   ClubService,
   ExampleService,
@@ -30,9 +31,6 @@ import {
   StadiumRepository,
   UserRepository,
 } from '../repositories';
-import { UserService } from '../services/user.service';
-import { AuthController } from '../controllers/auth.controller';
-import { UserController } from '../controllers/user.controller';
 
 // Register TypeORM DataSource singleton
 container.registerInstance('DataSource', dataSource);
