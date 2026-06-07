@@ -2,9 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserRepository } from '../repositories';
-import { LoginResponse, LoginUserRequest, RegisterUserRequest } from '../shared';
-import { ConflictException } from '../shared/exceptions';
-import { UnauthorizedException } from '../shared/exceptions';
+import { LoginResponse, LoginUserRequest, RegisterUserRequest, ConflictException, UnauthorizedException } from '../shared';
 import { envConfig } from '../config';
 import { UserPublicInfo } from '../models';
 

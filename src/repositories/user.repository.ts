@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 import { DataSource } from 'typeorm';
-import { RegisterUserRequest } from '../shared/interfaces';
 import { User } from '../entities';
 import { UserPublicInfo } from '../models';
+import { Role, RegisterUserRequest } from '../shared';
 
 @injectable()
 export class UserRepository {
@@ -12,10 +12,10 @@ export class UserRepository {
   ) {}
 
   async existsByEmailOrUsername(email: string, username: string): Promise<boolean> {
-    const [{ count }] = await this.dataSource.query(`SELECT COUNT(*)::int FROM ${this.tableName} WHERE email = $1 OR username = $2`, [
-      email,
-      username,
-    ]);
+    const [{ count }] = await this.dataSource.query(
+      `SELECT COUNT(*)::int FROM ${this.tableName} WHERE email = $1 OR (username = $2 AND "deletedAt" IS NULL)`,
+      [email, username],
+    );
 
     return count > 0;
   }
@@ -35,6 +35,56 @@ export class UserRepository {
     const user = await this.dataSource.query(`SELECT * FROM ${this.tableName} WHERE email = $1`, [email]);
 
     return user[0] ?? null;
+  }
+
+  async findById(userId: string): Promise<UserPublicInfo> {
+    const user = await this.dataSource.query(
+      `SELECT id, name, surname, email, username, role, "dateOfBirth", "createdAt", "updatedAt", "deletedAt"
+      FROM ${this.tableName}
+      WHERE id = $1 AND "deletedAt" IS NULL`,
+      [userId],
+    );
+
+    return user[0];
+  }
+
+  async findRoleById(userId: string): Promise<Role | null> {
+    const [{ role } = {}] = await this.dataSource.query(`SELECT role FROM ${this.tableName} WHERE id = $1 AND "deletedAt" IS NULL`, [
+      userId,
+    ]);
+
+    return role ?? null;
+  }
+
+  async deleteById(userId: string): Promise<void> {
+    await this.dataSource.query(`UPDATE ${this.tableName} SET "deletedAt" = NOW() WHERE id = $1`, [userId]);
+  }
+
+  async countAdmins(): Promise<number> {
+    const [{ count }] = await this.dataSource.query(
+      `SELECT COUNT(*)::int FROM ${this.tableName} WHERE role = 'ADMIN' AND "deletedAt" IS NULL`,
+    );
+
+    return count;
+  }
+
+  async findUsers(limit: number, offset: number, search: string): Promise<UserPublicInfo[]> {
+    return await this.dataSource.query(
+      `SELECT id, name, surname, email, username, role, "dateOfBirth", "createdAt", "updatedAt", "deletedAt"
+      FROM ${this.tableName}
+      WHERE username LIKE $1 AND "deletedAt" IS NULL
+      LIMIT $2 OFFSET $3`,
+      [`%${search}%`, limit, offset],
+    );
+  }
+
+  async countUsers(search: string): Promise<number> {
+    const [{ count }] = await this.dataSource.query(
+      `SELECT COUNT(*)::int FROM ${this.tableName} WHERE username LIKE $1 AND "deletedAt" IS NULL`,
+      [`%${search}%`],
+    );
+
+    return count;
   }
 
   private get tableName(): string {

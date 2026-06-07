@@ -1,5 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { UserRepository } from '../repositories';
+import { UserPublicInfo } from '../models';
+import { JwtPayload, PaginatedUsers, Role, UserSearchQuery, BadRequestException, ForbiddenException, NotFoundException } from '../shared';
 
 @injectable()
 export class UserService {
@@ -7,4 +9,43 @@ export class UserService {
     @inject(UserRepository)
     private readonly userRepository: UserRepository,
   ) {}
+
+  async getMe(userId: string): Promise<UserPublicInfo> {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    return user;
+  }
+
+  async deleteUserById(requester: JwtPayload, targetId: string): Promise<void> {
+    const targetRole = await this.userRepository.findRoleById(targetId);
+    if (!targetRole) {
+      throw new NotFoundException('User not found.');
+    }
+
+    if (requester.userId !== targetId && requester.role === Role.REGULAR) {
+      throw new ForbiddenException('You are not authorized to do that.');
+    }
+
+    if (targetRole === Role.ADMIN && (await this.userRepository.countAdmins()) === 1) {
+      throw new BadRequestException('Can not delete last admin.');
+    }
+
+    await this.userRepository.deleteById(targetId);
+  }
+
+  async findUsers(searchCriteria: UserSearchQuery): Promise<PaginatedUsers> {
+    const { limit = '10', offset = '0', search = '' } = searchCriteria;
+    const limitNum = Number(limit);
+    const offsetNum = Number(offset);
+
+    const [users, total] = await Promise.all([
+      this.userRepository.findUsers(limitNum, offsetNum, search),
+      this.userRepository.countUsers(search),
+    ]);
+
+    return { users, total };
+  }
 }
