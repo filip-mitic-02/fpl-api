@@ -1,0 +1,46 @@
+import { inject, injectable } from 'tsyringe';
+import { ClubService } from '../services';
+import { Response } from 'express';
+import {
+  AuthenticatedRequest,
+  CreateClubRequest,
+  IdParam,
+  NoParams,
+  SearchQuery,
+  sendResponse,
+  StatusCode,
+  UpdateClubRequest,
+} from '../shared';
+
+@injectable()
+export class ClubController {
+  constructor(
+    @inject(ClubService)
+    private readonly clubService: ClubService,
+  ) {}
+
+  async createClub(req: AuthenticatedRequest<CreateClubRequest>, res: Response): Promise<Response> {
+    const club = await this.clubService.createClub(req.body);
+    return sendResponse(res, StatusCode.CREATED, 'Club created successfully.', club);
+  }
+
+  async findClubs(req: AuthenticatedRequest<unknown, NoParams, SearchQuery>, res: Response): Promise<Response> {
+    const listOfClubs = await this.clubService.findClubs(req.query);
+    return sendResponse(res, StatusCode.OK, 'Clubs data retrieved successfully.', listOfClubs);
+  }
+
+  async findById(req: AuthenticatedRequest<unknown, IdParam>, res: Response): Promise<Response> {
+    const clubInfo = await this.clubService.findById(req.params.id);
+    return sendResponse(res, StatusCode.OK, 'Club retrieved successfully.', clubInfo);
+  }
+
+  async deleteById(req: AuthenticatedRequest<unknown, IdParam>, res: Response): Promise<Response> {
+    await this.clubService.deleteById(req.params.id);
+    return sendResponse(res, StatusCode.NO_CONTENT, 'Club deleted successfully.');
+  }
+
+  async updateById(req: AuthenticatedRequest<UpdateClubRequest, IdParam>, res: Response): Promise<Response> {
+    const updatedClubInfo = await this.clubService.updateById(req.params.id, req.body);
+    return sendResponse(res, StatusCode.OK, 'Club updated successfully.', updatedClubInfo);
+  }
+}

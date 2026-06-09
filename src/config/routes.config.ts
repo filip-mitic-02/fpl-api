@@ -1,5 +1,5 @@
 import express from 'express';
-import { authRouter, exampleRouter, userRouter } from '../routes';
+import { authRouter, clubRouter, exampleRouter, userRouter } from '../routes';
 
 export const setupRoutes = (app: express.Application) => {
   // #example
@@ -10,6 +10,9 @@ export const setupRoutes = (app: express.Application) => {
 
   // #user
   app.use('/api/v1/user', userRouter);
+
+  // #club
+  app.use('/api/v1/club', clubRouter);
 
   // #health
   app.get('/health', (req, res) => {
