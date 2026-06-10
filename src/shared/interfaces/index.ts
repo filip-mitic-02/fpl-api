@@ -7,4 +7,3 @@ export { JwtPayload } from './jwtPayload.interface';
 export { SearchQuery } from './searchQuery.interface';
 export { PaginatedData } from './paginatedData.interface';
 export { CreateClubRequest } from './createClubRequest.interface';
-export { UpdateClubRequest } from './updateClubRequest.interface';

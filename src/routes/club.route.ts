@@ -10,7 +10,6 @@ import {
   isAuthenticated,
   NoParams,
   SearchQuery,
-  UpdateClubRequest,
   validateBody,
 } from '../shared';
 
@@ -34,7 +33,7 @@ clubRouter.delete('/clubs/:id', isAuthenticated, isAdmin, (req: Request<{ id: st
 );
 
 clubRouter.patch('/clubs/:id', isAuthenticated, isAdmin, (req: Request<{ id: string }>, res: Response) =>
-  clubController.updateById(req as AuthenticatedRequest<UpdateClubRequest, IdParam>, res),
+  clubController.updateById(req as AuthenticatedRequest<Partial<CreateClubRequest>, IdParam>, res),
 );
 
 export { clubRouter };

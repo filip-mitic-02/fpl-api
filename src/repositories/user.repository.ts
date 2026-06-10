@@ -78,7 +78,7 @@ export class UserRepository {
     );
   }
 
-  async countUsers(search: string): Promise<number> {
+  async countUsersBySearch(search: string): Promise<number> {
     const [{ count }] = await this.dataSource.query(
       `SELECT COUNT(*)::int FROM ${this.tableName} WHERE username LIKE $1 AND "deletedAt" IS NULL`,
       [`%${search}%`],

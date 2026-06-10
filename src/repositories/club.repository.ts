@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { DataSource } from 'typeorm';
 import { Club } from '../entities';
 import { ClubModel } from '../models';
+import { CreateClubRequest } from '../shared';
 
 @injectable()
 export class ClubRepository {
@@ -35,7 +36,7 @@ export class ClubRepository {
     );
   }
 
-  async countClubs(search: string): Promise<number> {
+  async countClubsBySearch(search: string): Promise<number> {
     const [{ count }] = await this.dataSource.query(
       `SELECT COUNT(*)::int FROM ${this.tableName} WHERE name ILIKE $1 AND "deletedAt" IS NULL`,
       [`%${search}%`],
@@ -57,10 +58,24 @@ export class ClubRepository {
     await this.dataSource.query(`UPDATE ${this.tableName} SET "deletedAt" = NOW() WHERE id = $1`, [clubId]);
   }
 
-  async updateById(clubId: string, name: string, initials: string): Promise<ClubModel> {
+  async updateById(clubId: string, updateData: Partial<CreateClubRequest>): Promise<ClubModel> {
+    const updates: string[] = [];
+    const values: string[] = [];
+    let index = 1;
+
+    if (updateData.name !== undefined) {
+      updates.push(`name = $${index++}`);
+      values.push(updateData.name);
+    }
+    if (updateData.initials !== undefined) {
+      updates.push(`initials = $${index++}`);
+      values.push(updateData.initials);
+    }
+    values.push(clubId);
+
     const updatedClub = await this.dataSource.query(
-      `UPDATE ${this.tableName} SET name = $1, initials = $2 WHERE id = $3 RETURNING id, name, initials, "createdAt", "updatedAt", "deletedAt"`,
-      [name, initials, clubId],
+      `UPDATE ${this.tableName} SET ${updates.join(', ')} WHERE id = $${index} RETURNING id, name, initials, "createdAt", "updatedAt", "deletedAt"`,
+      values,
     );
 
     return updatedClub[0];

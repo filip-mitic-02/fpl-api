@@ -43,7 +43,7 @@ export class UserService {
 
     const [data, total] = await Promise.all([
       this.userRepository.findUsers(limitNum, offsetNum, search),
-      this.userRepository.countUsers(search),
+      this.userRepository.countUsersBySearch(search),
     ]);
 
     return { data, total };
