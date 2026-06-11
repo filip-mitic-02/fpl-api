@@ -37,12 +37,10 @@ export class UserService {
   }
 
   async findUsers(searchCriteria: SearchQuery): Promise<PaginatedData<UserPublicInfo>> {
-    const { limit = '10', offset = '0', search = '' } = searchCriteria;
-    const limitNum = Number(limit);
-    const offsetNum = Number(offset);
+    const { limit, offset, search } = searchCriteria;
 
     const [data, total] = await Promise.all([
-      this.userRepository.findUsers(limitNum, offsetNum, search),
+      this.userRepository.findUsers(limit, offset, search),
       this.userRepository.countUsersBySearch(search),
     ]);
 

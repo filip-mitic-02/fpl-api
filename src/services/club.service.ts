@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { ClubRepository } from '../repositories';
-import { BadRequestException, ConflictException, CreateClubRequest, NotFoundException, PaginatedData, SearchQuery } from '../shared';
+import { ConflictException, CreateClubRequest, NotFoundException, PaginatedData, SearchQuery } from '../shared';
 import { ClubModel } from '../models';
 
 @injectable()
@@ -21,12 +21,10 @@ export class ClubService {
   }
 
   async findClubs(searchCriteria: SearchQuery): Promise<PaginatedData<ClubModel>> {
-    const { limit = '10', offset = '0', search = '' } = searchCriteria;
-    const limitNum = Number(limit);
-    const offsetNum = Number(offset);
+    const { limit, offset, search } = searchCriteria;
 
     const [data, total] = await Promise.all([
-      this.clubRepository.findClubs(limitNum, offsetNum, search),
+      this.clubRepository.findClubs(limit, offset, search),
       this.clubRepository.countClubsBySearch(search),
     ]);
 
@@ -43,15 +41,18 @@ export class ClubService {
   }
 
   async deleteById(id: string): Promise<void> {
-    await this.findById(id);
+    const exists = await this.clubRepository.existsById(id);
+    if (!exists) {
+      throw new NotFoundException('Club not found.');
+    }
     await this.clubRepository.deleteById(id);
   }
 
-  async updateById(id: string, updateData: Partial<CreateClubRequest>): Promise<ClubModel> {
-    if (!updateData.name && !updateData.initials) {
-      throw new BadRequestException('At least one field must be provided.');
+  async updateById(id: string, updateData: Partial<CreateClubRequest>): Promise<Partial<ClubModel>> {
+    const exists = await this.clubRepository.existsById(id);
+    if (!exists) {
+      throw new NotFoundException('Club not found.');
     }
-    await this.findById(id);
     return await this.clubRepository.updateById(id, updateData);
   }
 }

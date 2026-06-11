@@ -47,7 +47,10 @@ export class ClubController {
   async updateById(
     req: AuthenticatedRequest<Partial<CreateClubRequest>, IdParam>,
     res: Response,
-  ): Promise<Response<ApiResponse<ClubModel>>> {
+  ): Promise<Response<ApiResponse<Partial<ClubModel>>>> {
+    if (Object.keys(req.body).length === 0) {
+      return sendResponse(res, StatusCode.OK, 'No fields provided, nothing was updated.', {});
+    }
     const updatedClubInfo = await this.clubService.updateById(req.params.id, req.body);
     return sendResponse(res, StatusCode.OK, 'Club updated successfully.', updatedClubInfo);
   }

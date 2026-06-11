@@ -2,7 +2,6 @@ import { inject, injectable } from 'tsyringe';
 import { DataSource } from 'typeorm';
 import { Club } from '../entities';
 import { ClubModel } from '../models';
-import { CreateClubRequest } from '../shared';
 
 @injectable()
 export class ClubRepository {
@@ -54,11 +53,19 @@ export class ClubRepository {
     return targetClub[0] ?? null;
   }
 
+  async existsById(id: string): Promise<boolean> {
+    const [{ count }] = await this.dataSource.query(`SELECT COUNT(*)::int FROM ${this.tableName} WHERE id = $1 AND "deletedAt" IS NULL`, [
+      id,
+    ]);
+
+    return count > 0;
+  }
+
   async deleteById(clubId: string): Promise<void> {
     await this.dataSource.query(`UPDATE ${this.tableName} SET "deletedAt" = NOW() WHERE id = $1`, [clubId]);
   }
 
-  async updateById(clubId: string, updateData: Partial<CreateClubRequest>): Promise<ClubModel> {
+  async updateById(clubId: string, updateData: Partial<ClubModel>): Promise<ClubModel> {
     const updates: string[] = [];
     const values: string[] = [];
     let index = 1;
