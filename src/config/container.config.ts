@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 import { dataSource } from './database.config';
 
-import { ExampleController, AuthController, UserController } from '../controllers';
+import { ExampleController, AuthController, UserController, ClubController } from '../controllers';
 import {
   AuthService,
   UserService,
@@ -148,6 +148,10 @@ container.register(AuthController, {
 
 container.register(UserController, {
   useClass: UserController,
+});
+
+container.register(ClubController, {
+  useClass: ClubController,
 });
 
 // Export container for resolving dependencies

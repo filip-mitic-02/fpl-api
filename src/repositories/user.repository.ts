@@ -37,7 +37,7 @@ export class UserRepository {
     return user[0] ?? null;
   }
 
-  async findById(userId: string): Promise<UserPublicInfo> {
+  async findById(userId: string): Promise<UserPublicInfo | null> {
     const user = await this.dataSource.query(
       `SELECT id, name, surname, email, username, role, "dateOfBirth", "createdAt", "updatedAt", "deletedAt"
       FROM ${this.tableName}
@@ -45,7 +45,7 @@ export class UserRepository {
       [userId],
     );
 
-    return user[0];
+    return user[0] ?? null;
   }
 
   async findRoleById(userId: string): Promise<Role | null> {
@@ -78,7 +78,7 @@ export class UserRepository {
     );
   }
 
-  async countUsers(search: string): Promise<number> {
+  async countUsersBySearch(search: string): Promise<number> {
     const [{ count }] = await this.dataSource.query(
       `SELECT COUNT(*)::int FROM ${this.tableName} WHERE username LIKE $1 AND "deletedAt" IS NULL`,
       [`%${search}%`],
