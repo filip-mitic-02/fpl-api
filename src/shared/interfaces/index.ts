@@ -6,3 +6,4 @@ export { LoginResponse } from './loginResponse.interface';
 export { JwtPayload } from './jwtPayload.interface';
 export { PaginatedData } from './paginatedData.interface';
 export { CreateClubRequest } from './createClubRequest.interface';
+export { CreatePlayerRequest } from './createPlayerRequest.interface';

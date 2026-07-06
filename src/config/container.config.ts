@@ -31,6 +31,7 @@ import {
   StadiumRepository,
   UserRepository,
 } from '../repositories';
+import { PlayerController } from '../controllers/player.controller';
 
 // Register TypeORM DataSource singleton
 container.registerInstance('DataSource', dataSource);
@@ -152,6 +153,10 @@ container.register(UserController, {
 
 container.register(ClubController, {
   useClass: ClubController,
+});
+
+container.register(PlayerController, {
+  useClass: PlayerController,
 });
 
 // Export container for resolving dependencies
