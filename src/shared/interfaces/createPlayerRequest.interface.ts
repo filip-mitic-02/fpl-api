@@ -1,9 +1,9 @@
-import { Position } from "../enums";
+import { Position } from '../enums';
 
 export interface CreatePlayerRequest {
-    clubId: string;
-    name: string;
-    surname: string;
-    value: number;
-    position: Position;
+  clubId: string;
+  name: string;
+  surname: string;
+  value: number;
+  position: Position;
 }

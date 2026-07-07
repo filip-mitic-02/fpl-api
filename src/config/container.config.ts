@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 import { dataSource } from './database.config';
 
-import { ExampleController, AuthController, UserController, ClubController } from '../controllers';
+import { ExampleController, AuthController, UserController, ClubController, PlayerController, FantasyTeamController } from '../controllers';
 import {
   AuthService,
   UserService,
@@ -31,7 +31,6 @@ import {
   StadiumRepository,
   UserRepository,
 } from '../repositories';
-import { PlayerController } from '../controllers/player.controller';
 
 // Register TypeORM DataSource singleton
 container.registerInstance('DataSource', dataSource);
@@ -157,6 +156,10 @@ container.register(ClubController, {
 
 container.register(PlayerController, {
   useClass: PlayerController,
+});
+
+container.register(FantasyTeamController, {
+  useClass: FantasyTeamController,
 });
 
 // Export container for resolving dependencies

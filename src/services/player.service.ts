@@ -15,7 +15,7 @@ export class PlayerService {
   async createPlayer(playerInfo: CreatePlayerRequest): Promise<PlayerModel> {
     const { clubId } = playerInfo;
     const doesClubExist = await this.clubRepository.existsById(clubId);
-    if(!doesClubExist) {
+    if (!doesClubExist) {
       throw new NotFoundException('Club with that Id does not exist.');
     }
 
@@ -23,12 +23,12 @@ export class PlayerService {
   }
 
   async findPlayers(searchCriteria: PlayerSearchQuery): Promise<PaginatedData<PlayerModel>> {
-      const [data, total] = await Promise.all([
-        this.playerRepository.findPlayers(searchCriteria),
-        this.playerRepository.countPlayersBySearch(searchCriteria),
-      ]);
-  
-      return { data, total };
+    const [data, total] = await Promise.all([
+      this.playerRepository.findPlayers(searchCriteria),
+      this.playerRepository.countPlayersBySearch(searchCriteria),
+    ]);
+
+    return { data, total };
   }
 
   async findById(id: string): Promise<PlayerModel> {
@@ -39,7 +39,7 @@ export class PlayerService {
 
     return targetPlayer;
   }
-  
+
   async deleteById(id: string): Promise<void> {
     const exists = await this.playerRepository.existsById(id);
     if (!exists) {
@@ -47,7 +47,7 @@ export class PlayerService {
     }
     await this.playerRepository.deleteById(id);
   }
-  
+
   async updateById(id: string, updateData: Partial<CreatePlayerRequest>): Promise<Partial<PlayerModel>> {
     const exists = await this.playerRepository.existsById(id);
     if (!exists) {

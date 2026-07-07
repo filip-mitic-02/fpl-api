@@ -1,12 +1,22 @@
-import { Router, Request, Response } from "express";
-import { container } from "tsyringe";
-import { PlayerController } from "../controllers";
-import { AuthenticatedRequest, CreatePlayerRequest, CreatePlayerSchema, IdParam, isAdmin, isAuthenticated, NoParams, PlayerSearchQuery, validateBody } from "../shared";
+import { Router, Request, Response } from 'express';
+import { container } from 'tsyringe';
+import { PlayerController } from '../controllers';
+import {
+  AuthenticatedRequest,
+  CreatePlayerRequest,
+  CreatePlayerSchema,
+  IdParam,
+  isAdmin,
+  isAuthenticated,
+  NoParams,
+  PlayerSearchQuery,
+  validateBody,
+} from '../shared';
 
 const playerRouter = Router();
 const playerController = container.resolve(PlayerController);
 
-playerRouter.post('/players', validateBody(CreatePlayerSchema), isAuthenticated, isAdmin, (req: Request, res: Response) => 
+playerRouter.post('/players', isAuthenticated, validateBody(CreatePlayerSchema), isAdmin, (req: Request, res: Response) =>
   playerController.createPlayer(req as AuthenticatedRequest<CreatePlayerRequest>, res),
 );
 
