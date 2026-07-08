@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { DataSource } from 'typeorm';
-import { PlayerModel, PlayerValidationData } from '../models';
+import { PlayerModel, PlayerPositionCount, PlayerValidationData } from '../models';
 import { Player } from '../entities';
 import { PlayerSearchQuery } from '../shared';
 
@@ -109,6 +109,16 @@ export class PlayerRepository {
     return await this.dataSource.query(
       `SELECT id, "clubId", position, value::float FROM ${this.tableName} WHERE id = ANY($1) AND "deletedAt" IS NULL`,
       [players],
+    );
+  }
+
+  async countByPosition(playerIds: string[]): Promise<PlayerPositionCount[]> {
+    return await this.dataSource.query(
+      `SELECT position, COUNT(*)::int as count 
+         FROM ${this.tableName} 
+         WHERE id = ANY($1) AND "deletedAt" IS NULL 
+         GROUP BY position`,
+      [playerIds],
     );
   }
 

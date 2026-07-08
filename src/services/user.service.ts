@@ -1,7 +1,16 @@
 import { inject, injectable } from 'tsyringe';
 import { UserRepository } from '../repositories';
 import { UserPublicInfo } from '../models';
-import { JwtPayload, PaginatedData, Role, SearchQuery, BadRequestException, ForbiddenException, NotFoundException } from '../shared';
+import {
+  JwtPayload,
+  PaginatedData,
+  Role,
+  SearchQuery,
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+  validateUuid,
+} from '../shared';
 
 @injectable()
 export class UserService {
@@ -20,6 +29,7 @@ export class UserService {
   }
 
   async deleteUserById(requester: JwtPayload, targetId: string): Promise<void> {
+    validateUuid(targetId);
     const targetRole = await this.userRepository.findRoleById(targetId);
     if (!targetRole) {
       throw new NotFoundException('User not found.');

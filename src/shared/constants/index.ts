@@ -1,1 +1,10 @@
 export { PASSWORD_REGEX, EMAIL_REGEX } from './regex.constants';
+export {
+  MAX_BUDGET,
+  TEAM_SIZE,
+  MAX_FROM_SAME_CLUB,
+  NUMBER_OF_DEFENDERS,
+  NUMBER_OF_FORWARDS,
+  NUMBER_OF_GOALKEEPERS,
+  NUMBER_OF_MIDFIELDERS,
+} from './fantasyTeam.constants';

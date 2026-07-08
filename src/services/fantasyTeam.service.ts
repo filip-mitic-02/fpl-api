@@ -1,6 +1,21 @@
 import { inject, injectable } from 'tsyringe';
 import { FantasyTeamRepository, PlayerRepository } from '../repositories';
-import { BadRequestException, ConflictException, CreateFantasyTeamRequest, NotFoundException, Position, TransferRequest } from '../shared';
+import {
+  BadRequestException,
+  ConflictException,
+  CreateFantasyTeamRequest,
+  MAX_BUDGET,
+  MAX_FROM_SAME_CLUB,
+  NotFoundException,
+  NUMBER_OF_DEFENDERS,
+  NUMBER_OF_FORWARDS,
+  NUMBER_OF_GOALKEEPERS,
+  NUMBER_OF_MIDFIELDERS,
+  Position,
+  TEAM_SIZE,
+  TransferRequest,
+  validateUuid,
+} from '../shared';
 import { FantasyTeamModel, FantasyTeamWithPlayersModel } from '../models';
 
 @injectable()
@@ -14,8 +29,9 @@ export class FantasyTeamService {
 
   async createFantasyTeam(userId: string, teamData: CreateFantasyTeamRequest): Promise<FantasyTeamModel> {
     const { name, players } = teamData;
+
     const uniquePlayers = new Set(players);
-    if (uniquePlayers.size !== 15) {
+    if (uniquePlayers.size !== TEAM_SIZE) {
       throw new BadRequestException('You can not have duplicate players in your team.');
     }
 
@@ -24,27 +40,35 @@ export class FantasyTeamService {
       throw new ConflictException('User already made his team.');
     }
 
-    const foundPlayers = await this.playersRepository.findByIds(players);
-    if (foundPlayers.length !== 15) {
+    const [foundPlayers, positionCounts] = await Promise.all([
+      this.playersRepository.findByIds(players),
+      this.playersRepository.countByPosition(players),
+    ]);
+    if (foundPlayers.length !== TEAM_SIZE) {
       throw new BadRequestException('One or more players have invalid playerId.');
     }
 
-    const goalkeepers = foundPlayers.filter((p) => p.position === Position.GOALKEEPER);
-    const defenders = foundPlayers.filter((p) => p.position === Position.DEFENDER);
-    const midfielders = foundPlayers.filter((p) => p.position === Position.MIDFIELDER);
-    const forwards = foundPlayers.filter((p) => p.position === Position.FORWARD);
-    if (goalkeepers.length !== 2 || defenders.length !== 5 || midfielders.length !== 5 || forwards.length !== 3) {
+    const goalkeepers = positionCounts.find((p) => p.position === Position.GOALKEEPER)?.count ?? 0;
+    const defenders = positionCounts.find((p) => p.position === Position.DEFENDER)?.count ?? 0;
+    const midfielders = positionCounts.find((p) => p.position === Position.MIDFIELDER)?.count ?? 0;
+    const forwards = positionCounts.find((p) => p.position === Position.FORWARD)?.count ?? 0;
+    if (
+      goalkeepers !== NUMBER_OF_GOALKEEPERS ||
+      defenders !== NUMBER_OF_DEFENDERS ||
+      midfielders !== NUMBER_OF_MIDFIELDERS ||
+      forwards !== NUMBER_OF_FORWARDS
+    ) {
       throw new BadRequestException('You must pick 2 Goalkeepers, 5 Defenders, 5 Midfielders and 3 Forwards.');
     }
 
     const totalValue = foundPlayers.reduce((sum, player) => sum + player.value, 0);
-    if (totalValue > 100) {
+    if (totalValue > MAX_BUDGET) {
       throw new BadRequestException('You can not spend more than 100m.');
     }
 
     for (const player of foundPlayers) {
       const playersFromSameClub = foundPlayers.filter((p) => p.clubId === player.clubId).length;
-      if (playersFromSameClub > 3) {
+      if (playersFromSameClub > MAX_FROM_SAME_CLUB) {
         throw new BadRequestException('You can not have more than 3 players from the same club.');
       }
     }
@@ -57,7 +81,13 @@ export class FantasyTeamService {
 
     const captain = foundPlayers.filter((p) => p.position === Position.GOALKEEPER && !bench.includes(p.id))[0].id;
 
-    return await this.fantasyTeamRepository.createFantasyTeam(userId, name, players, bench, captain);
+    const teamPlayers = players.map((playerId) => ({
+      playerId,
+      isCaptain: playerId === captain,
+      onBench: bench.includes(playerId),
+    }));
+
+    return await this.fantasyTeamRepository.createFantasyTeam(userId, name, teamPlayers);
   }
 
   async getMyTeam(userId: string): Promise<FantasyTeamWithPlayersModel> {
@@ -65,10 +95,12 @@ export class FantasyTeamService {
     if (!team) {
       throw new NotFoundException('Fantasy team not found.');
     }
+
     return team;
   }
 
   async getTeamById(id: string): Promise<FantasyTeamWithPlayersModel> {
+    validateUuid(id);
     const team = await this.fantasyTeamRepository.getTeamById(id);
     if (!team) {
       throw new NotFoundException('Fantasy team not found.');
@@ -77,6 +109,7 @@ export class FantasyTeamService {
   }
 
   async transferPlayer(teamId: string, transferData: TransferRequest): Promise<FantasyTeamWithPlayersModel> {
+    validateUuid(teamId);
     const { playerOutId, playerInId } = transferData;
     const team = await this.fantasyTeamRepository.getTeamById(teamId);
     if (!team) {
@@ -108,12 +141,12 @@ export class FantasyTeamService {
 
     const currentValue = team.players.reduce((sum, p) => sum + p.value, 0);
     const newValue = currentValue - playerOut.value + playerIn.value;
-    if (newValue > 100) {
+    if (newValue > MAX_BUDGET) {
       throw new BadRequestException('You do not have enough budget for this transfer.');
     }
 
     const playersFromSameClub = team.players.filter((p) => p.clubId === playerIn.clubId && p.id !== playerOutId).length;
-    if (playersFromSameClub >= 3) {
+    if (playersFromSameClub >= MAX_FROM_SAME_CLUB) {
       throw new BadRequestException('You can not have more than 3 players from the same club.');
     }
 

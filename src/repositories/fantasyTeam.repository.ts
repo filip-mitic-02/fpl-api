@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { DataSource } from 'typeorm';
 import { FantasyTeam } from '../entities';
-import { FantasyTeamModel, FantasyTeamWithPlayersModel } from '../models';
+import { FantasyTeamModel, FantasyTeamPlayerData, FantasyTeamWithPlayersModel } from '../models';
 import { FantasyTeamRow } from '../shared';
 
 @injectable()
@@ -17,7 +17,7 @@ export class FantasyTeamRepository {
     return count > 0;
   }
 
-  async createFantasyTeam(userId: string, name: string, players: string[], bench: string[], captain: string): Promise<FantasyTeamModel> {
+  async createFantasyTeam(userId: string, name: string, teamPlayers: FantasyTeamPlayerData[]): Promise<FantasyTeamModel> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -30,13 +30,11 @@ export class FantasyTeamRepository {
         [userId, name],
       );
 
-      for (const playerId of players) {
-        const isOnBench = bench.includes(playerId);
-        const isCaptain = playerId === captain;
+      for (const player of teamPlayers) {
         await queryRunner.query(
           `INSERT INTO "fantasyTeamsPlayers" ("fantasyTeamId", "playerId", "isCaptain", "onBench") 
                  VALUES ($1, $2, $3, $4)`,
-          [fantasyTeam.id, playerId, isCaptain, isOnBench],
+          [fantasyTeam.id, player.playerId, player.isCaptain, player.onBench],
         );
       }
 

@@ -19,3 +19,9 @@ export type FantasyTeamPlayerModel = Pick<PlayerModel, 'id' | 'clubId' | 'name' 
 export interface FantasyTeamWithPlayersModel extends FantasyTeamModel {
   players: FantasyTeamPlayerModel[];
 }
+
+export type FantasyTeamPlayerData = {
+  playerId: string;
+  isCaptain: boolean;
+  onBench: boolean;
+};

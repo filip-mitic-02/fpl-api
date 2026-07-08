@@ -13,3 +13,8 @@ export interface PlayerModel {
 }
 
 export type PlayerValidationData = Pick<PlayerModel, 'id' | 'clubId' | 'position' | 'value'>;
+
+export type PlayerPositionCount = {
+  position: Position;
+  count: number;
+};

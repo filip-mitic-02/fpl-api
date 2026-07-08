@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { ClubRepository } from '../repositories';
-import { ConflictException, CreateClubRequest, NotFoundException, PaginatedData, SearchQuery } from '../shared';
+import { ConflictException, CreateClubRequest, NotFoundException, PaginatedData, SearchQuery, validateUuid } from '../shared';
 import { ClubModel } from '../models';
 
 @injectable()
@@ -32,6 +32,7 @@ export class ClubService {
   }
 
   async findById(id: string): Promise<ClubModel> {
+    validateUuid(id);
     const targetClub = await this.clubRepository.findById(id);
     if (!targetClub) {
       throw new NotFoundException('Club not found.');
@@ -41,6 +42,7 @@ export class ClubService {
   }
 
   async deleteById(id: string): Promise<void> {
+    validateUuid(id);
     const exists = await this.clubRepository.existsById(id);
     if (!exists) {
       throw new NotFoundException('Club not found.');
@@ -49,6 +51,7 @@ export class ClubService {
   }
 
   async updateById(id: string, updateData: Partial<CreateClubRequest>): Promise<Partial<ClubModel>> {
+    validateUuid(id);
     const exists = await this.clubRepository.existsById(id);
     if (!exists) {
       throw new NotFoundException('Club not found.');
