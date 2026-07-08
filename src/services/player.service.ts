@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { ClubRepository, PlayerRepository } from '../repositories';
-import { CreatePlayerRequest, NotFoundException, PaginatedData, PlayerSearchQuery } from '../shared';
+import { CreatePlayerRequest, NotFoundException, PaginatedData, PlayerSearchQuery, validateUuid } from '../shared';
 import { PlayerModel } from '../models';
 
 @injectable()
@@ -15,7 +15,7 @@ export class PlayerService {
   async createPlayer(playerInfo: CreatePlayerRequest): Promise<PlayerModel> {
     const { clubId } = playerInfo;
     const doesClubExist = await this.clubRepository.existsById(clubId);
-    if(!doesClubExist) {
+    if (!doesClubExist) {
       throw new NotFoundException('Club with that Id does not exist.');
     }
 
@@ -23,15 +23,16 @@ export class PlayerService {
   }
 
   async findPlayers(searchCriteria: PlayerSearchQuery): Promise<PaginatedData<PlayerModel>> {
-      const [data, total] = await Promise.all([
-        this.playerRepository.findPlayers(searchCriteria),
-        this.playerRepository.countPlayersBySearch(searchCriteria),
-      ]);
-  
-      return { data, total };
+    const [data, total] = await Promise.all([
+      this.playerRepository.findPlayers(searchCriteria),
+      this.playerRepository.countPlayersBySearch(searchCriteria),
+    ]);
+
+    return { data, total };
   }
 
   async findById(id: string): Promise<PlayerModel> {
+    validateUuid(id);
     const targetPlayer = await this.playerRepository.findById(id);
     if (!targetPlayer) {
       throw new NotFoundException('Player not found.');
@@ -39,16 +40,18 @@ export class PlayerService {
 
     return targetPlayer;
   }
-  
+
   async deleteById(id: string): Promise<void> {
+    validateUuid(id);
     const exists = await this.playerRepository.existsById(id);
     if (!exists) {
       throw new NotFoundException('Player not found.');
     }
     await this.playerRepository.deleteById(id);
   }
-  
+
   async updateById(id: string, updateData: Partial<CreatePlayerRequest>): Promise<Partial<PlayerModel>> {
+    validateUuid(id);
     const exists = await this.playerRepository.existsById(id);
     if (!exists) {
       throw new NotFoundException('Player not found.');

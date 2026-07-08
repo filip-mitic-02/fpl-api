@@ -16,7 +16,7 @@ import {
 const clubRouter = Router();
 const clubController = container.resolve(ClubController);
 
-clubRouter.post('/clubs', validateBody(CreateClubSchema), isAuthenticated, isAdmin, (req: Request, res: Response) =>
+clubRouter.post('/clubs', isAuthenticated, validateBody(CreateClubSchema), isAdmin, (req: Request, res: Response) =>
   clubController.createClub(req as AuthenticatedRequest<CreateClubRequest>, res),
 );
 

@@ -7,3 +7,6 @@ export { JwtPayload } from './jwtPayload.interface';
 export { PaginatedData } from './paginatedData.interface';
 export { CreateClubRequest } from './createClubRequest.interface';
 export { CreatePlayerRequest } from './createPlayerRequest.interface';
+export { CreateFantasyTeamRequest } from './createFantasyTeamRequest.interface';
+export { TransferRequest } from './transferRequest.interface';
+export { FantasyTeamRow } from './fantasyTeamRow.interface';

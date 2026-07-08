@@ -5,3 +5,5 @@ export { UpdateClubSchema } from './updateClub.schema';
 export { SearchQuerySchema } from './searchQuery.schema';
 export { CreatePlayerSchema } from './createPlayer.schema';
 export { PlayerSearchQuerySchema } from './playerSearchQuery.schema';
+export { CreateFantasyTeamSchema } from './createFantasyTeam.schema';
+export { TransferSchema } from './transfer.schema';
