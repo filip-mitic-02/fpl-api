@@ -10,3 +10,6 @@ export { CreatePlayerRequest } from './createPlayerRequest.interface';
 export { CreateFantasyTeamRequest } from './createFantasyTeamRequest.interface';
 export { TransferRequest } from './transferRequest.interface';
 export { FantasyTeamRow } from './fantasyTeamRow.interface';
+export { CreateGameweekRequest } from './createGameweekRequest.interface';
+export { CreateGameweekPlayerRequest } from './createGameweekPlayerRequest.interface';
+export { GameweekTeamRow } from './gameweekTeamRow.interface';

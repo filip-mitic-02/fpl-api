@@ -103,6 +103,12 @@ export class FantasyTeamRepository {
     }
   }
 
+  async existsById(id: string): Promise<boolean> {
+    const [{ count }] = await this.dataSource.query(`SELECT COUNT(*)::int FROM ${this.tableName} WHERE id = $1`, [id]);
+
+    return count > 0;
+  }
+
   private mapToFantasyTeamWithPlayers(rows: FantasyTeamRow[]): FantasyTeamWithPlayersModel {
     const first = rows[0];
     return {
