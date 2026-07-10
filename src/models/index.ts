@@ -8,6 +8,8 @@ export {
   FantasyTeamPlayerData,
   FantasyTeamGameweekModel,
   FantasyTeamGameweekPlayerModel,
+  FantasyTeamChipModel,
 } from './fantasyTeam.model';
 export { GameweekModel } from './gameweek.model';
 export { GameweekPlayerModel } from './gameweekPlayer.model';
+export { ChipModel } from './chip.model';

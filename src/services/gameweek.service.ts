@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { FantasyTeamRepository, GameweekRepository, PlayerRepository } from '../repositories';
 import {
+  ChipType,
   ConflictException,
   CreateGameweekPlayerRequest,
   CreateGameweekRequest,
@@ -76,8 +77,12 @@ export class GameweekService {
       throw new NotFoundException('Gameweek doesnt exist.');
     }
 
-    const rows = await this.gameweekRepository.getTeamByGameweek(fantasyTeamId, gameweekId);
-    return this.mapToFantasyTeamGameweek(rows);
+    const [rows, activeChip] = await Promise.all([
+      this.gameweekRepository.getTeamByGameweek(fantasyTeamId, gameweekId),
+      this.fantasyTeamRepository.getActiveChipForGameweek(fantasyTeamId, gameweekId),
+    ]);
+
+    return this.mapToFantasyTeamGameweek(rows, activeChip);
   }
 
   private calculatePoints(playerInfo: CreateGameweekPlayerRequest, position: Position): number {
@@ -96,12 +101,15 @@ export class GameweekService {
     return points;
   }
 
-  private mapToFantasyTeamGameweek(rows: GameweekTeamRow[]): FantasyTeamGameweekModel {
+  private mapToFantasyTeamGameweek(rows: GameweekTeamRow[], activeChip: ChipType | null): FantasyTeamGameweekModel {
+    const isBenchBoost = activeChip === ChipType.BENCH_BOOST;
+    const captainMultiplier = activeChip === ChipType.TRIPLE_CAPTAIN ? 3 : 2;
+
     const totalPoints = rows
-      .filter((row) => !row.onBench)
+      .filter((row) => isBenchBoost || !row.onBench)
       .reduce((sum, row) => {
         const points = Number(row.gwPoints);
-        return sum + (row.isCaptain ? points * 2 : points);
+        return sum + (row.isCaptain ? points * captainMultiplier : points);
       }, 0);
 
     return {
@@ -112,7 +120,7 @@ export class GameweekService {
         name: row.playerName,
         surname: row.surname,
         position: row.position,
-        gwPoints: row.isCaptain ? Number(row.gwPoints) * 2 : Number(row.gwPoints),
+        gwPoints: row.isCaptain ? Number(row.gwPoints) * captainMultiplier : Number(row.gwPoints),
       })),
       totalPoints,
     };
