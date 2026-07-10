@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { DataSource } from 'typeorm';
 import { PlayerModel, PlayerPositionCount, PlayerValidationData } from '../models';
 import { Player } from '../entities';
-import { PlayerSearchQuery } from '../shared';
+import { PlayerSearchQuery, Position } from '../shared';
 
 @injectable()
 export class PlayerRepository {
@@ -120,6 +120,12 @@ export class PlayerRepository {
          GROUP BY position`,
       [playerIds],
     );
+  }
+
+  async findPositionById(id: string): Promise<Position | null> {
+    const [result] = await this.dataSource.query(`SELECT position FROM ${this.tableName} WHERE id = $1 AND "deletedAt" IS NULL`, [id]);
+
+    return result?.position ?? null;
   }
 
   private buildWhereClause(searchCriteria: PlayerSearchQuery): { whereClause: string; values: unknown[]; index: number } {

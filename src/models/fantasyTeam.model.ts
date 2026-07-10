@@ -1,3 +1,4 @@
+import { Position } from '../shared';
 import { PlayerModel } from './player.model';
 
 export interface FantasyTeamModel {
@@ -25,3 +26,18 @@ export type FantasyTeamPlayerData = {
   isCaptain: boolean;
   onBench: boolean;
 };
+
+export interface FantasyTeamGameweekPlayerModel {
+  id: string;
+  name: string;
+  surname: string;
+  position: Position;
+  gwPoints: number;
+}
+
+export interface FantasyTeamGameweekModel {
+  id: string;
+  name: string;
+  players: FantasyTeamGameweekPlayerModel[];
+  totalPoints: number;
+}

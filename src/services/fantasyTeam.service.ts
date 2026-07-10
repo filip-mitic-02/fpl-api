@@ -28,7 +28,7 @@ export class FantasyTeamService {
   ) {}
 
   async createFantasyTeam(userId: string, teamData: CreateFantasyTeamRequest): Promise<FantasyTeamModel> {
-    const { name, players } = teamData;
+    const { name, players, captainId } = teamData;
 
     const uniquePlayers = new Set(players);
     if (uniquePlayers.size !== TEAM_SIZE) {
@@ -73,17 +73,19 @@ export class FantasyTeamService {
       }
     }
 
+    if (!players.includes(captainId)) {
+      throw new BadRequestException('Captain must be one of the 15 selected players.');
+    }
+
     const bench: string[] = [];
     bench.push(foundPlayers.filter((p) => p.position === Position.GOALKEEPER)[0].id);
     bench.push(foundPlayers.filter((p) => p.position === Position.DEFENDER)[0].id);
     bench.push(foundPlayers.filter((p) => p.position === Position.MIDFIELDER)[0].id);
     bench.push(foundPlayers.filter((p) => p.position === Position.FORWARD)[0].id);
 
-    const captain = foundPlayers.filter((p) => p.position === Position.GOALKEEPER && !bench.includes(p.id))[0].id;
-
     const teamPlayers = players.map((playerId) => ({
       playerId,
-      isCaptain: playerId === captain,
+      isCaptain: playerId === captainId,
       onBench: bench.includes(playerId),
     }));
 

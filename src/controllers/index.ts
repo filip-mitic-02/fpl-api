@@ -4,3 +4,4 @@ export { UserController } from './user.controller';
 export { ClubController } from './club.controller';
 export { PlayerController } from './player.controller';
 export { FantasyTeamController } from './fantasyTeam.controller';
+export { GameweekController } from './gameweek.controller';

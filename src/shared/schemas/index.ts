@@ -7,3 +7,5 @@ export { CreatePlayerSchema } from './createPlayer.schema';
 export { PlayerSearchQuerySchema } from './playerSearchQuery.schema';
 export { CreateFantasyTeamSchema } from './createFantasyTeam.schema';
 export { TransferSchema } from './transfer.schema';
+export { CreateGameweekSchema } from './createGameweek.schema';
+export { CreateGameweekPlayerSchema } from './createGameweekPlayer.schema';
