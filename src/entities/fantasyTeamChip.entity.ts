@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { FantasyTeam, Chip } from './';
+import { FantasyTeam, Chip, Gameweek } from './';
 
 @Entity('fantasyTeamsChips')
 export class FantasyTeamChip {
@@ -26,4 +26,16 @@ export class FantasyTeamChip {
     default: false,
   })
   isUsed: boolean;
+
+  @Column({
+    type: 'uuid',
+    nullable: true,
+  })
+  gameweekId: string | null;
+
+  @ManyToOne(() => Gameweek, { nullable: true })
+  @JoinColumn({
+    name: 'gameweekId',
+  })
+  gameweek: Gameweek | null;
 }

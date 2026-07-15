@@ -1,4 +1,4 @@
-import { Position } from '../shared';
+import { ChipType, Position } from '../shared';
 import { PlayerModel } from './player.model';
 
 export interface FantasyTeamModel {
@@ -40,4 +40,12 @@ export interface FantasyTeamGameweekModel {
   name: string;
   players: FantasyTeamGameweekPlayerModel[];
   totalPoints: number;
+}
+
+export interface FantasyTeamChipModel {
+  fantasyTeamId: string;
+  fantasyTeamName: string;
+  chipId: string;
+  chipType: ChipType;
+  gameweekId: string;
 }

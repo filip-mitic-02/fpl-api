@@ -5,3 +5,4 @@ export { NoParams } from './noParams.type';
 export { SearchQuery } from './searchQuery.type';
 export { PlayerSearchQuery } from './playerSearchQuery.type';
 export { GameweekParams } from './gameweekParams.type';
+export { ChipParams } from './chipParams.type';

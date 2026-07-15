@@ -1,8 +1,17 @@
 import { Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 import { FantasyTeamService } from '../services';
-import { ApiResponse, AuthenticatedRequest, CreateFantasyTeamRequest, IdParam, sendResponse, StatusCode, TransferRequest } from '../shared';
-import { FantasyTeamModel, FantasyTeamWithPlayersModel } from '../models';
+import {
+  ApiResponse,
+  AuthenticatedRequest,
+  ChipParams,
+  CreateFantasyTeamRequest,
+  IdParam,
+  sendResponse,
+  StatusCode,
+  TransferRequest,
+} from '../shared';
+import { FantasyTeamChipModel, FantasyTeamModel, FantasyTeamWithPlayersModel } from '../models';
 
 @injectable()
 export class FantasyTeamController {
@@ -38,5 +47,18 @@ export class FantasyTeamController {
   ): Promise<Response<ApiResponse<FantasyTeamWithPlayersModel>>> {
     const fantasyTeam = await this.fantasyTeamService.transferPlayer(req.params.id, req.body);
     return sendResponse(res, StatusCode.OK, 'Transfer made successfully.', fantasyTeam);
+  }
+
+  async activateChip(req: AuthenticatedRequest<unknown, ChipParams>, res: Response): Promise<Response<ApiResponse<FantasyTeamChipModel>>> {
+    const fantasyTeamChip = await this.fantasyTeamService.activateChip(req.params.id, req.params.chipType, req.user.userId);
+    return sendResponse(res, StatusCode.OK, 'Chip activated successfully.', fantasyTeamChip);
+  }
+
+  async useWildcard(
+    req: AuthenticatedRequest<CreateFantasyTeamRequest, IdParam>,
+    res: Response,
+  ): Promise<Response<ApiResponse<FantasyTeamModel>>> {
+    const fantasyTeam = await this.fantasyTeamService.useWildcard(req.params.id, req.body, req.user.userId);
+    return sendResponse(res, StatusCode.OK, 'Wildcard activated successfully.', fantasyTeam);
   }
 }

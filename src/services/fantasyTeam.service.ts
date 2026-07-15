@@ -1,9 +1,11 @@
 import { inject, injectable } from 'tsyringe';
-import { FantasyTeamRepository, PlayerRepository } from '../repositories';
+import { ChipRepository, FantasyTeamRepository, GameweekRepository, PlayerRepository } from '../repositories';
 import {
   BadRequestException,
+  ChipType,
   ConflictException,
   CreateFantasyTeamRequest,
+  ForbiddenException,
   MAX_BUDGET,
   MAX_FROM_SAME_CLUB,
   NotFoundException,
@@ -16,7 +18,7 @@ import {
   TransferRequest,
   validateUuid,
 } from '../shared';
-import { FantasyTeamModel, FantasyTeamWithPlayersModel } from '../models';
+import { FantasyTeamChipModel, FantasyTeamModel, FantasyTeamWithPlayersModel } from '../models';
 
 @injectable()
 export class FantasyTeamService {
@@ -25,6 +27,10 @@ export class FantasyTeamService {
     private readonly fantasyTeamRepository: FantasyTeamRepository,
     @inject(PlayerRepository)
     private readonly playersRepository: PlayerRepository,
+    @inject(ChipRepository)
+    private readonly chipRepository: ChipRepository,
+    @inject(GameweekRepository)
+    private readonly gameweekRepository: GameweekRepository,
   ) {}
 
   async createFantasyTeam(userId: string, teamData: CreateFantasyTeamRequest): Promise<FantasyTeamModel> {
@@ -89,7 +95,9 @@ export class FantasyTeamService {
       onBench: bench.includes(playerId),
     }));
 
-    return await this.fantasyTeamRepository.createFantasyTeam(userId, name, teamPlayers);
+    const chips = await this.chipRepository.findAll();
+
+    return await this.fantasyTeamRepository.createFantasyTeam(userId, name, teamPlayers, chips);
   }
 
   async getMyTeam(userId: string): Promise<FantasyTeamWithPlayersModel> {
@@ -155,5 +163,119 @@ export class FantasyTeamService {
     await this.fantasyTeamRepository.transferPlayer(teamId, playerOutId, playerInId);
 
     return await this.getTeamById(teamId);
+  }
+
+  async activateChip(fantasyTeamId: string, chipType: ChipType, userId: string): Promise<FantasyTeamChipModel> {
+    validateUuid(fantasyTeamId);
+
+    const team = await this.fantasyTeamRepository.getTeamById(fantasyTeamId);
+    if (!team) {
+      throw new NotFoundException('Fantasy team not found.');
+    }
+
+    if (team.userId !== userId) {
+      throw new ForbiddenException('You are not authorized to activate chips for this team.');
+    }
+
+    const currentGameweek = await this.gameweekRepository.getCurrentGameweek();
+    if (!currentGameweek) {
+      throw new BadRequestException('There is no active gameweek at the moment.');
+    }
+
+    const chip = await this.chipRepository.findByType(chipType);
+    if (!chip) {
+      throw new NotFoundException('Chip not found.');
+    }
+
+    const isChipUsed = await this.fantasyTeamRepository.isChipUsed(fantasyTeamId, chip.id);
+    if (isChipUsed) {
+      throw new ConflictException('This chip has already been used.');
+    }
+
+    const isChipUsedForGameweek = await this.fantasyTeamRepository.isChipUsedForGameweek(fantasyTeamId, currentGameweek.id);
+    if (isChipUsedForGameweek) {
+      throw new ConflictException('You can only activate one chip per gameweek.');
+    }
+
+    return await this.fantasyTeamRepository.activateChip(fantasyTeamId, chip.id, currentGameweek.id);
+  }
+
+  async useWildcard(fantasyTeamId: string, teamData: CreateFantasyTeamRequest, userId: string): Promise<FantasyTeamModel> {
+    validateUuid(fantasyTeamId);
+
+    const team = await this.fantasyTeamRepository.getTeamById(fantasyTeamId);
+    if (!team) {
+      throw new NotFoundException('Fantasy team not found.');
+    }
+
+    if (team.userId !== userId) {
+      throw new ForbiddenException('You are not authorized to use wildcard for this team.');
+    }
+
+    const wildcardChip = await this.chipRepository.findByType(ChipType.WILDCARD);
+    const isWildcardActive = await this.fantasyTeamRepository.isChipUsed(fantasyTeamId, wildcardChip!.id);
+    if (!isWildcardActive) {
+      throw new BadRequestException('Wildcard chip is not activated.');
+    }
+
+    const { players, captainId } = teamData;
+
+    const uniquePlayers = new Set(players);
+    if (uniquePlayers.size !== TEAM_SIZE) {
+      throw new BadRequestException('You can not have duplicate players in your team.');
+    }
+
+    const [foundPlayers, positionCounts] = await Promise.all([
+      this.playersRepository.findByIds(players),
+      this.playersRepository.countByPosition(players),
+    ]);
+
+    if (foundPlayers.length !== TEAM_SIZE) {
+      throw new BadRequestException('One or more players have invalid playerId.');
+    }
+
+    const goalkeepers = positionCounts.find((p) => p.position === Position.GOALKEEPER)?.count ?? 0;
+    const defenders = positionCounts.find((p) => p.position === Position.DEFENDER)?.count ?? 0;
+    const midfielders = positionCounts.find((p) => p.position === Position.MIDFIELDER)?.count ?? 0;
+    const forwards = positionCounts.find((p) => p.position === Position.FORWARD)?.count ?? 0;
+
+    if (
+      goalkeepers !== NUMBER_OF_GOALKEEPERS ||
+      defenders !== NUMBER_OF_DEFENDERS ||
+      midfielders !== NUMBER_OF_MIDFIELDERS ||
+      forwards !== NUMBER_OF_FORWARDS
+    ) {
+      throw new BadRequestException('You must pick 2 Goalkeepers, 5 Defenders, 5 Midfielders and 3 Forwards.');
+    }
+
+    const totalValue = foundPlayers.reduce((sum, player) => sum + player.value, 0);
+    if (totalValue > MAX_BUDGET) {
+      throw new BadRequestException('You can not spend more than 100m.');
+    }
+
+    for (const player of foundPlayers) {
+      const playersFromSameClub = foundPlayers.filter((p) => p.clubId === player.clubId).length;
+      if (playersFromSameClub > MAX_FROM_SAME_CLUB) {
+        throw new BadRequestException('You can not have more than 3 players from the same club.');
+      }
+    }
+
+    if (!players.includes(captainId)) {
+      throw new BadRequestException('Captain must be one of the 15 selected players.');
+    }
+
+    const bench: string[] = [];
+    bench.push(foundPlayers.filter((p) => p.position === Position.GOALKEEPER)[0].id);
+    bench.push(foundPlayers.filter((p) => p.position === Position.DEFENDER)[0].id);
+    bench.push(foundPlayers.filter((p) => p.position === Position.MIDFIELDER)[0].id);
+    bench.push(foundPlayers.filter((p) => p.position === Position.FORWARD)[0].id);
+
+    const teamPlayers = players.map((playerId) => ({
+      playerId,
+      isCaptain: playerId === captainId,
+      onBench: bench.includes(playerId),
+    }));
+
+    return await this.fantasyTeamRepository.useWildcard(fantasyTeamId, teamPlayers);
   }
 }

@@ -75,6 +75,18 @@ export class GameweekRepository {
     );
   }
 
+  async getCurrentGameweek(): Promise<GameweekModel | null> {
+    const result = await this.dataSource.query(
+      `SELECT id, name, "startDate", "createdAt", "updatedAt" 
+         FROM ${this.tableName} 
+         WHERE "startDate" > NOW() 
+         ORDER BY "startDate" ASC 
+         LIMIT 1`,
+    );
+
+    return result[0] ?? null;
+  }
+
   private get tableName(): string {
     return this.dataSource.getMetadata(Gameweek).tableName;
   }
