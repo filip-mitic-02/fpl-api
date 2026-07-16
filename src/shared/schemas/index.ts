@@ -10,3 +10,6 @@ export { TransferSchema } from './transfer.schema';
 export { CreateGameweekSchema } from './createGameweek.schema';
 export { CreateGameweekPlayerSchema } from './createGameweekPlayer.schema';
 export { WildcardSchema } from './wildcard.schema';
+export { IdParamSchema } from './idParam.schema';
+export { GameweekParamsSchema } from './gameweekParam.schema';
+export { SuggestPlayersSchema } from './suggestPlayer.schema';

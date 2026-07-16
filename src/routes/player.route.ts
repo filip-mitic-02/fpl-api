@@ -6,11 +6,13 @@ import {
   CreatePlayerRequest,
   CreatePlayerSchema,
   IdParam,
+  IdParamSchema,
   isAdmin,
   isAuthenticated,
   NoParams,
   PlayerSearchQuery,
   validateBody,
+  validateParams,
 } from '../shared';
 
 const playerRouter = Router();
@@ -24,15 +26,15 @@ playerRouter.get('/players', isAuthenticated, (req: Request, res: Response) =>
   playerController.findPlayers(req as unknown as AuthenticatedRequest<unknown, NoParams, PlayerSearchQuery>, res),
 );
 
-playerRouter.get('/players/:id', isAuthenticated, (req: Request<{ id: string }>, res: Response) =>
+playerRouter.get('/players/:id', isAuthenticated, validateParams(IdParamSchema), (req: Request, res: Response) =>
   playerController.findById(req as AuthenticatedRequest<unknown, IdParam>, res),
 );
 
-playerRouter.delete('/players/:id', isAuthenticated, isAdmin, (req: Request<{ id: string }>, res: Response) =>
+playerRouter.delete('/players/:id', isAuthenticated, isAdmin, validateParams(IdParamSchema), (req: Request, res: Response) =>
   playerController.deleteById(req as AuthenticatedRequest<unknown, IdParam>, res),
 );
 
-playerRouter.patch('/players/:id', isAuthenticated, isAdmin, (req: Request<{ id: string }>, res: Response) =>
+playerRouter.patch('/players/:id', isAuthenticated, isAdmin, validateParams(IdParamSchema), (req: Request, res: Response) =>
   playerController.updateById(req as AuthenticatedRequest<Partial<CreatePlayerRequest>, IdParam>, res),
 );
 

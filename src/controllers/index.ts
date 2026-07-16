@@ -5,3 +5,4 @@ export { ClubController } from './club.controller';
 export { PlayerController } from './player.controller';
 export { FantasyTeamController } from './fantasyTeam.controller';
 export { GameweekController } from './gameweek.controller';
+export { AiController } from './ai.controller';

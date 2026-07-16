@@ -8,7 +8,6 @@ import {
   GameweekTeamRow,
   NotFoundException,
   Position,
-  validateUuid,
 } from '../shared';
 import { FantasyTeamGameweekModel, GameweekModel, GameweekPlayerModel } from '../models';
 
@@ -40,8 +39,6 @@ export class GameweekService {
   }
 
   async addPlayerStats(gameweekId: string, playerInfo: CreateGameweekPlayerRequest): Promise<GameweekPlayerModel> {
-    validateUuid(gameweekId);
-
     const doesGameweekExist = await this.gameweekRepository.existsById(gameweekId);
     if (!doesGameweekExist) {
       throw new NotFoundException('Gameweek with this gameweekId doesnt exist.');
@@ -64,9 +61,6 @@ export class GameweekService {
   }
 
   async getTeamByGameweek(fantasyTeamId: string, gameweekId: string): Promise<FantasyTeamGameweekModel> {
-    validateUuid(fantasyTeamId);
-    validateUuid(gameweekId);
-
     const doesFantasyTeamExist = await this.fantasyTeamRepository.existsById(fantasyTeamId);
     if (!doesFantasyTeamExist) {
       throw new NotFoundException('Fantasy team doesnt exist.');

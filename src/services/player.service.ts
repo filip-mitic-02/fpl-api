@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { ClubRepository, PlayerRepository } from '../repositories';
-import { CreatePlayerRequest, NotFoundException, PaginatedData, PlayerSearchQuery, validateUuid } from '../shared';
+import { CreatePlayerRequest, NotFoundException, PaginatedData, PlayerSearchQuery } from '../shared';
 import { PlayerModel } from '../models';
 
 @injectable()
@@ -32,7 +32,6 @@ export class PlayerService {
   }
 
   async findById(id: string): Promise<PlayerModel> {
-    validateUuid(id);
     const targetPlayer = await this.playerRepository.findById(id);
     if (!targetPlayer) {
       throw new NotFoundException('Player not found.');
@@ -42,7 +41,6 @@ export class PlayerService {
   }
 
   async deleteById(id: string): Promise<void> {
-    validateUuid(id);
     const exists = await this.playerRepository.existsById(id);
     if (!exists) {
       throw new NotFoundException('Player not found.');
@@ -51,7 +49,6 @@ export class PlayerService {
   }
 
   async updateById(id: string, updateData: Partial<CreatePlayerRequest>): Promise<Partial<PlayerModel>> {
-    validateUuid(id);
     const exists = await this.playerRepository.existsById(id);
     if (!exists) {
       throw new NotFoundException('Player not found.');

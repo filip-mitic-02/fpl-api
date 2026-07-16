@@ -8,4 +8,5 @@ export interface EnvConfig {
   DATABASE_PASSWORD: string;
   LOG_LEVEL: string;
   JWT_SECRET: string;
+  GEMINI_API_KEY: string;
 }

@@ -7,10 +7,12 @@ import {
   CreateFantasyTeamRequest,
   CreateFantasyTeamSchema,
   IdParam,
+  IdParamSchema,
   isAuthenticated,
   TransferRequest,
   TransferSchema,
   validateBody,
+  validateParams,
   WildcardSchema,
 } from '../shared';
 
@@ -25,20 +27,31 @@ fantasyTeamRouter.get('/fantasy-teams/my', isAuthenticated, (req: Request, res: 
   fantasyTeamController.getMyTeam(req as AuthenticatedRequest, res),
 );
 
-fantasyTeamRouter.get('/fantasy-teams/:id', isAuthenticated, (req: Request, res: Response) =>
+fantasyTeamRouter.get('/fantasy-teams/:id', isAuthenticated, validateParams(IdParamSchema), (req: Request, res: Response) =>
   fantasyTeamController.getTeamById(req as AuthenticatedRequest<unknown, IdParam>, res),
 );
 
-fantasyTeamRouter.patch('/fantasy-teams/:id/transfer', isAuthenticated, validateBody(TransferSchema), (req: Request, res: Response) =>
-  fantasyTeamController.transferPlayer(req as AuthenticatedRequest<TransferRequest, IdParam>, res),
+fantasyTeamRouter.patch(
+  '/fantasy-teams/:id/transfer',
+  isAuthenticated,
+  validateParams(IdParamSchema),
+  validateBody(TransferSchema),
+  (req: Request, res: Response) => fantasyTeamController.transferPlayer(req as AuthenticatedRequest<TransferRequest, IdParam>, res),
 );
 
-fantasyTeamRouter.patch('/fantasy-teams/:id/chips/:chipType', isAuthenticated, (req: Request, res: Response) =>
-  fantasyTeamController.activateChip(req as AuthenticatedRequest<unknown, ChipParams>, res),
+fantasyTeamRouter.patch(
+  '/fantasy-teams/:id/chips/:chipType',
+  isAuthenticated,
+  validateParams(IdParamSchema),
+  (req: Request, res: Response) => fantasyTeamController.activateChip(req as AuthenticatedRequest<unknown, ChipParams>, res),
 );
 
-fantasyTeamRouter.patch('/fantasy-teams/:id/wildcard', isAuthenticated, validateBody(WildcardSchema), (req: Request, res: Response) =>
-  fantasyTeamController.useWildcard(req as AuthenticatedRequest<CreateFantasyTeamRequest, IdParam>, res),
+fantasyTeamRouter.patch(
+  '/fantasy-teams/:id/wildcard',
+  isAuthenticated,
+  validateParams(IdParamSchema),
+  validateBody(WildcardSchema),
+  (req: Request, res: Response) => fantasyTeamController.useWildcard(req as AuthenticatedRequest<CreateFantasyTeamRequest, IdParam>, res),
 );
 
 export { fantasyTeamRouter };
