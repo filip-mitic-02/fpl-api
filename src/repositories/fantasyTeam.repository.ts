@@ -131,13 +131,15 @@ export class FantasyTeamRepository {
     return count > 0;
   }
 
-  async activateChip(fantasyTeamId: string, chipId: string, gameweekId: string): Promise<FantasyTeamChipModel> {
+  async activateChip(fantasyTeamId: string, chipId: string, gameweekId: string): Promise<void> {
     await this.dataSource.query(
       `UPDATE "fantasyTeamsChips" SET "isUsed" = true, "gameweekId" = $1 
          WHERE "fantasyTeamId" = $2 AND "chipId" = $3`,
       [gameweekId, fantasyTeamId, chipId],
     );
+  }
 
+  async getActivatedChip(fantasyTeamId: string, chipId: string): Promise<FantasyTeamChipModel> {
     const result = await this.dataSource.query(
       `SELECT ftc."fantasyTeamId", ft.name as "fantasyTeamName", ftc."chipId", c.type as "chipType"
          FROM "fantasyTeamsChips" ftc

@@ -9,6 +9,7 @@ import {
   PlayerController,
   FantasyTeamController,
   GameweekController,
+  AiController,
 } from '../controllers';
 import {
   AuthService,
@@ -24,6 +25,7 @@ import {
   GameweekService,
   PlayerService,
   StadiumService,
+  AiService,
 } from '../services/';
 import {
   ChipRepository,
@@ -145,6 +147,10 @@ container.register(AuthService, {
   useClass: AuthService,
 });
 
+container.register(AiService, {
+  useClass: AiService,
+});
+
 // Register controllers
 container.register(ExampleController, {
   useClass: ExampleController,
@@ -172,6 +178,10 @@ container.register(FantasyTeamController, {
 
 container.register(GameweekController, {
   useClass: GameweekController,
+});
+
+container.register(AiController, {
+  useClass: AiController,
 });
 
 // Export container for resolving dependencies

@@ -8,10 +8,13 @@ import {
   CreateGameweekRequest,
   CreateGameweekSchema,
   GameweekParams,
+  GameweekParamsSchema,
   IdParam,
+  IdParamSchema,
   isAdmin,
   isAuthenticated,
   validateBody,
+  validateParams,
 } from '../shared';
 
 const gameweekRouter = Router();
@@ -25,13 +28,17 @@ gameweekRouter.post(
   '/gameweeks/:id/players',
   isAuthenticated,
   isAdmin,
+  validateParams(IdParamSchema),
   validateBody(CreateGameweekPlayerSchema),
   (req: Request, res: Response) =>
     gameweekController.addPlayerStats(req as AuthenticatedRequest<CreateGameweekPlayerRequest, IdParam>, res),
 );
 
-gameweekRouter.get('/fantasy-teams/:id/gameweeks/:gameweekId', isAuthenticated, (req: Request, res: Response) =>
-  gameweekController.getTeamByGameweek(req as AuthenticatedRequest<unknown, GameweekParams>, res),
+gameweekRouter.get(
+  '/fantasy-teams/:id/gameweeks/:gameweekId',
+  isAuthenticated,
+  validateParams(GameweekParamsSchema),
+  (req: Request, res: Response) => gameweekController.getTeamByGameweek(req as AuthenticatedRequest<unknown, GameweekParams>, res),
 );
 
 export { gameweekRouter };
