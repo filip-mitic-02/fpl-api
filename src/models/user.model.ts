@@ -6,7 +6,8 @@ export interface UserModel {
   surname: string;
   email: string;
   username: string;
-  password: string;
+  password: string | null;
+  googleId: string | null;
   role: Role;
   dateOfBirth: Date;
   createdAt: Date;
@@ -14,4 +15,4 @@ export interface UserModel {
   deletedAt: Date | null;
 }
 
-export type UserPublicInfo = Omit<UserModel, 'password'>;
+export type UserPublicInfo = Omit<UserModel, 'password' | 'googleId'>;

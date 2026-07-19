@@ -13,3 +13,7 @@ export { FantasyTeamRow } from './fantasyTeamRow.interface';
 export { CreateGameweekRequest } from './createGameweekRequest.interface';
 export { CreateGameweekPlayerRequest } from './createGameweekPlayerRequest.interface';
 export { GameweekTeamRow } from './gameweekTeamRow.interface';
+export { SuggestPlayersRequest } from './suggestPlayerRequest.interface';
+export { PlayerSuggestion } from './playerSuggestion.interface';
+export { GoogleTokenResponse } from './googleTokenResponse.interface';
+export { GoogleUserInfo } from './googleUserInfo.interface';
