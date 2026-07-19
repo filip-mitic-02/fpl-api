@@ -7,6 +7,7 @@ export class CreateFantasyTeamsChipsTable1777363263290 implements MigrationInter
                 "fantasyTeamId" uuid NOT NULL,
                 "chipId" uuid NOT NULL,
                 "isUsed" boolean NOT NULL DEFAULT false,
+                "gameweekId" uuid,
 
                 PRIMARY KEY("fantasyTeamId", "chipId"),
 
@@ -16,8 +17,12 @@ export class CreateFantasyTeamsChipsTable1777363263290 implements MigrationInter
 
                 CONSTRAINT "fk_fantasyTeamsChips_chip"
                     FOREIGN KEY("chipId")
-                    REFERENCES chips(id)
-            ); 
+                    REFERENCES chips(id),
+
+                CONSTRAINT "fk_fantasyTeamsChips_gameweek"
+                    FOREIGN KEY("gameweekId")
+                    REFERENCES gameweeks(id)
+            );
         `);
   }
 

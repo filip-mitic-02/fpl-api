@@ -6,11 +6,13 @@ import {
   CreateClubRequest,
   CreateClubSchema,
   IdParam,
+  IdParamSchema,
   isAdmin,
   isAuthenticated,
   NoParams,
   SearchQuery,
   validateBody,
+  validateParams,
 } from '../shared';
 
 const clubRouter = Router();
@@ -24,15 +26,15 @@ clubRouter.get('/clubs', isAuthenticated, (req: Request, res: Response) =>
   clubController.findClubs(req as unknown as AuthenticatedRequest<unknown, NoParams, SearchQuery>, res),
 );
 
-clubRouter.get('/clubs/:id', isAuthenticated, (req: Request<{ id: string }>, res: Response) =>
+clubRouter.get('/clubs/:id', isAuthenticated, validateParams(IdParamSchema), (req: Request, res: Response) =>
   clubController.findById(req as AuthenticatedRequest<unknown, IdParam>, res),
 );
 
-clubRouter.delete('/clubs/:id', isAuthenticated, isAdmin, (req: Request<{ id: string }>, res: Response) =>
+clubRouter.delete('/clubs/:id', isAuthenticated, isAdmin, validateParams(IdParamSchema), (req: Request, res: Response) =>
   clubController.deleteById(req as AuthenticatedRequest<unknown, IdParam>, res),
 );
 
-clubRouter.patch('/clubs/:id', isAuthenticated, isAdmin, (req: Request<{ id: string }>, res: Response) =>
+clubRouter.patch('/clubs/:id', isAuthenticated, isAdmin, validateParams(IdParamSchema), (req: Request, res: Response) =>
   clubController.updateById(req as AuthenticatedRequest<Partial<CreateClubRequest>, IdParam>, res),
 );
 

@@ -16,7 +16,6 @@ import {
   Position,
   TEAM_SIZE,
   TransferRequest,
-  validateUuid,
 } from '../shared';
 import { FantasyTeamChipModel, FantasyTeamModel, FantasyTeamWithPlayersModel } from '../models';
 
@@ -110,7 +109,6 @@ export class FantasyTeamService {
   }
 
   async getTeamById(id: string): Promise<FantasyTeamWithPlayersModel> {
-    validateUuid(id);
     const team = await this.fantasyTeamRepository.getTeamById(id);
     if (!team) {
       throw new NotFoundException('Fantasy team not found.');
@@ -119,7 +117,6 @@ export class FantasyTeamService {
   }
 
   async transferPlayer(teamId: string, transferData: TransferRequest): Promise<FantasyTeamWithPlayersModel> {
-    validateUuid(teamId);
     const { playerOutId, playerInId } = transferData;
     const team = await this.fantasyTeamRepository.getTeamById(teamId);
     if (!team) {
@@ -166,8 +163,6 @@ export class FantasyTeamService {
   }
 
   async activateChip(fantasyTeamId: string, chipType: ChipType, userId: string): Promise<FantasyTeamChipModel> {
-    validateUuid(fantasyTeamId);
-
     const team = await this.fantasyTeamRepository.getTeamById(fantasyTeamId);
     if (!team) {
       throw new NotFoundException('Fantasy team not found.');
@@ -197,12 +192,11 @@ export class FantasyTeamService {
       throw new ConflictException('You can only activate one chip per gameweek.');
     }
 
-    return await this.fantasyTeamRepository.activateChip(fantasyTeamId, chip.id, currentGameweek.id);
+    await this.fantasyTeamRepository.activateChip(fantasyTeamId, chip.id, currentGameweek.id);
+    return await this.fantasyTeamRepository.getActivatedChip(fantasyTeamId, chip.id);
   }
 
   async useWildcard(fantasyTeamId: string, teamData: CreateFantasyTeamRequest, userId: string): Promise<FantasyTeamModel> {
-    validateUuid(fantasyTeamId);
-
     const team = await this.fantasyTeamRepository.getTeamById(fantasyTeamId);
     if (!team) {
       throw new NotFoundException('Fantasy team not found.');

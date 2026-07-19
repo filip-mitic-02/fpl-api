@@ -11,3 +11,4 @@ export { FantasyTeamPlayerService } from './fantasyTeamPlayer.service';
 export { GameweekPlayerService } from './gameweekPlayer.service';
 export { GameweekClubService } from './gameweekClub.service';
 export { AuthService } from './auth.service';
+export { AiService } from './ai.service';

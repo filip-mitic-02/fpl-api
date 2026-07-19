@@ -14,6 +14,7 @@ const defaults: EnvConfig = {
   DATABASE_PASSWORD: 'postgres',
   LOG_LEVEL: 'debug',
   JWT_SECRET: 'default_secret',
+  GEMINI_API_KEY: '',
 };
 
 export const envConfig: EnvConfig = {
@@ -26,4 +27,5 @@ export const envConfig: EnvConfig = {
   DATABASE_PASSWORD: process.env.DATABASE_PASSWORD || defaults.DATABASE_PASSWORD,
   LOG_LEVEL: process.env.LOG_LEVEL || defaults.LOG_LEVEL,
   JWT_SECRET: process.env.JWT_SECRET || defaults.JWT_SECRET,
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || defaults.GEMINI_API_KEY,
 };
