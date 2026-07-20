@@ -35,8 +35,17 @@ export class User {
   @Column({
     type: 'varchar',
     length: 255,
+    nullable: true,
   })
-  password: string;
+  password: string | null;
+
+  @Column({
+    type: 'varchar',
+    length: 255,
+    unique: true,
+    nullable: true,
+  })
+  googleId: string | null;
 
   @Column({
     type: 'enum',

@@ -87,6 +87,26 @@ export class UserRepository {
     return count;
   }
 
+  async findByGoogleId(googleId: string): Promise<User | null> {
+    const result = await this.dataSource.query(
+        `SELECT * FROM ${this.tableName} WHERE "googleId" = $1 AND "deletedAt" IS NULL`,
+        [googleId]
+    );
+
+    return result[0] ?? null;
+  }
+
+  async createGoogleUser(googleId: string, email: string, name: string, username: string): Promise<User> {
+    const result = await this.dataSource.query(
+        `INSERT INTO ${this.tableName} ("googleId", email, username, name, surname, "dateOfBirth", role)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         RETURNING *`,
+        [googleId, email, username, name, '', '1900-01-01', 'REGULAR']
+    );
+
+    return result[0];
+  }
+
   private get tableName(): string {
     return this.dataSource.getMetadata(User).tableName;
   }

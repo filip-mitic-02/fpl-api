@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserRepository } from '../repositories';
-import { LoginResponse, LoginUserRequest, RegisterUserRequest, ConflictException, UnauthorizedException } from '../shared';
+import { LoginResponse, LoginUserRequest, RegisterUserRequest, ConflictException, UnauthorizedException, BadRequestException, GoogleUserInfo, GoogleTokenResponse } from '../shared';
 import { envConfig } from '../config';
 import { UserPublicInfo } from '../models';
 
@@ -32,9 +32,51 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials.');
     }
 
+    if (!user.password) {
+      throw new UnauthorizedException('Invalid credentials.');
+    }
+
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       throw new UnauthorizedException('Invalid credentials.');
+    }
+
+    const accessToken = jwt.sign({ userId: user.id, role: user.role }, envConfig.JWT_SECRET, { expiresIn: '15m' });
+
+    return { accessToken };
+  }
+
+  async googleAuth(code: string): Promise<LoginResponse> {
+    if (!code) {
+        throw new BadRequestException('Authorization code is missing.');
+    }
+
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            code,
+            client_id: envConfig.GOOGLE_CLIENT_ID,
+            client_secret: envConfig.GOOGLE_CLIENT_SECRET,
+            redirect_uri: envConfig.GOOGLE_CALLBACK_URL,
+            grant_type: 'authorization_code',
+        }),
+    });
+
+    const tokenData = await tokenResponse.json() as GoogleTokenResponse;
+
+    const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` },
+    });
+
+    const googleUser = await userInfoResponse.json() as GoogleUserInfo;
+
+    let user = await this.userRepository.findByGoogleId(googleUser.id);
+
+    const username = googleUser.email.split('@')[0];
+    
+    if (!user) {
+        user = await this.userRepository.createGoogleUser(googleUser.id, googleUser.email, googleUser.name, username);
     }
 
     const accessToken = jwt.sign({ userId: user.id, role: user.role }, envConfig.JWT_SECRET, { expiresIn: '15m' });

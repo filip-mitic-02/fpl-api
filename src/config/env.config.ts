@@ -15,6 +15,9 @@ const defaults: EnvConfig = {
   LOG_LEVEL: 'debug',
   JWT_SECRET: 'default_secret',
   GEMINI_API_KEY: '',
+  GOOGLE_CLIENT_ID: '',
+  GOOGLE_CLIENT_SECRET: '',
+  GOOGLE_CALLBACK_URL: '',
 };
 
 export const envConfig: EnvConfig = {
@@ -28,4 +31,7 @@ export const envConfig: EnvConfig = {
   LOG_LEVEL: process.env.LOG_LEVEL || defaults.LOG_LEVEL,
   JWT_SECRET: process.env.JWT_SECRET || defaults.JWT_SECRET,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || defaults.GEMINI_API_KEY,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || defaults.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || defaults.GOOGLE_CLIENT_SECRET,
+  GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL || defaults.GOOGLE_CALLBACK_URL,
 };

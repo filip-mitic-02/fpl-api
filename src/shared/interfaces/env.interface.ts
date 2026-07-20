@@ -9,4 +9,7 @@ export interface EnvConfig {
   LOG_LEVEL: string;
   JWT_SECRET: string;
   GEMINI_API_KEY: string;
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
+  GOOGLE_CALLBACK_URL: string;
 }

@@ -8,3 +8,4 @@ export {
   NUMBER_OF_GOALKEEPERS,
   NUMBER_OF_MIDFIELDERS,
 } from './fantasyTeam.constants';
+export { GOOGLE_AUTH_BASE_URL } from './auth.constants';
